@@ -1,25 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Add Navigate to the import
-import AuthProvider from './context/AuthContext';
-import ApiProvider from './context/ApiContext';
+// src/App.js
+import React, { useContext } from 'react';
+import { AuthContext } from './context/AuthContext';
 import Login from './components/Auth/Login';
-import TaskList from './components/Tasks/TaskList';
+import Dashboard from './components/Dashboard/Dashboard';
 
 const App = () => {
-    return (
-        <AuthProvider>
-            <ApiProvider>
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<Navigate to="/login" />} /> {/* Default redirection */}
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/tasks" element={<TaskList />} />
-                    </Routes>
-                </Router>
-            </ApiProvider>
-        </AuthProvider>
-    );
+    const { authState } = useContext(AuthContext); // Access context
+
+    return <>{authState?.token ? <Dashboard /> : <Login />}</>;
 };
 
-console.log('App component rendered');
 export default App;

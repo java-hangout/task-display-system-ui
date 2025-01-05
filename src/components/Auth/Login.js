@@ -1,73 +1,66 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 
 const Login = () => {
     const { login } = useContext(AuthContext);
-    const [credentials, setCredentials] = useState({
-        username: '',
-        password: '',
-        role: 'ROLE_USER', // Default to 'ROLE_USER' or provide a dropdown or field to change this
-    });
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-    const [loginError, setLoginError] = useState(''); // State to track login error message
-    const navigate = useNavigate(); // Initialize the navigate function
+    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    const [error, setError] = useState('');
 
     const handleLogin = async () => {
-        console.log("Logging in with credentials:", credentials); // Log credentials for debugging
         try {
             const response = await fetch('http://localhost:8080/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(credentials),
+                body: JSON.stringify({ ...credentials, role: 'ROLE_USER' }),
             });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Login error response:', errorData);
+                setError(errorData.message || 'Invalid username or password');
+                return;
+            }
+
             const data = await response.json();
-            console.log("API Response:", data); // Log the response from the server
 
             if (data.token) {
-                console.log('Token received:', data.token); // Log the received token
-                login(data.token); // Save the token in the AuthContext
-                setIsLoggedIn(true); // Update the login status
-                setLoginError(''); // Clear any previous login errors
+                login(data.token);
             } else {
-                console.error('Login failed: No token received', data); // Handle error if no token is returned
-                setLoginError('Oops! It looks like the username or password you entered is incorrect. Please check your credentials and try again.');
+                setError('Login failed. Token not received.');
             }
-        } catch (error) {
-            console.error('Login failed:', error); // Log any error encountered
-            setLoginError('Oops! It looks like the username or password you entered is incorrect. Please check your credentials and try again.');
+        } catch (err) {
+            console.error('Error during login:', err);
+            setError('Failed to login. Please try again later.');
         }
     };
 
     return (
-        <div>
-            {isLoggedIn ? (
-                // Show success message and link after login
-                <div>
-                    <p>Login successful!</p>
-                    <a href="/tasks">Click here to view your tasks</a>
-                </div>
-            ) : (
-                // Show login form if not logged in
-                <div>
-                    <h1>Login</h1>
+        <div className="login-container">
+            <div className="login-form">
+                <h2 className="login-header">Task Display System</h2>
+                {error && <div className="error-message">{error}</div>}
+                <div className="input-group">
                     <input
                         type="text"
+                        className="input-field"
                         placeholder="Username"
                         value={credentials.username}
                         onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
                     />
+                </div>
+                <div className="input-group">
                     <input
                         type="password"
+                        className="input-field"
                         placeholder="Password"
                         value={credentials.password}
                         onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                     />
-                    <button onClick={handleLogin}>Login</button>
-                    {loginError && <p style={{ color: 'red' }}>{loginError}</p>} {/* Show error message */}
                 </div>
-            )}
+                <button className="login-button" onClick={handleLogin}>
+                    Login
+                </button>
+            </div>
         </div>
     );
 };
