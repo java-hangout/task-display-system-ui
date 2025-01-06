@@ -14,18 +14,19 @@ const Login = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...credentials, role: 'ROLE_USER' }),
             });
-
+    
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error('Login error response:', errorData);
                 setError(errorData.message || 'Invalid username or password');
                 return;
             }
-
+    
             const data = await response.json();
-
+    
             if (data.token) {
                 login(data.token);
+                localStorage.setItem('username', credentials.username); // Store username in local storage
             } else {
                 setError('Login failed. Token not received.');
             }
@@ -34,6 +35,7 @@ const Login = () => {
             setError('Failed to login. Please try again later.');
         }
     };
+    
 
     return (
         <div className="login-container">
