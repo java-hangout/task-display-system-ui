@@ -10,7 +10,15 @@ const TaskList = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const response = await axios.get('http://localhost:8083/api/tasks/fetch/all');
+                const username = localStorage.getItem('username'); // Retrieve the username dynamically
+                if (!username) {
+                    console.error('No username found in local storage');
+                    return;
+                }
+                console.error('username found in local storage',username);
+                const response = await axios.get(
+                    `http://localhost:8083/api/tasks/assignedTo/${username}`
+                );
                 setTasks(response.data);
             } catch (error) {
                 console.error('Error fetching tasks:', error);
@@ -65,9 +73,7 @@ const TaskList = () => {
                                     <td style={{ border: '1px solid black', padding: '8px' }}>{formatDate(task.dueDate)}</td>
                                     <td style={{ border: '1px solid black', padding: '8px' }}>{task.comments}</td>
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
-                                        <button onClick={() => handleUpdateClick(task)}>
-                                            Update
-                                        </button>
+                                        <button onClick={() => handleUpdateClick(task)}>Update</button>
                                     </td>
                                 </tr>
                             ))}

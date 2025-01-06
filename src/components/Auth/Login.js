@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import './Login.css'; // Import external CSS
 
 const Login = () => {
     const { login } = useContext(AuthContext);
@@ -37,7 +38,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="login-form">
-                <h2 className="login-header">Task Display System</h2>
+                <h2 className="login-header">Task Display System Login</h2>
                 {error && <div className="error-message">{error}</div>}
                 <div className="input-group">
                     <input
