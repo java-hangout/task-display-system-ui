@@ -15,7 +15,7 @@ const TaskList = () => {
                     console.error('No username found in local storage');
                     return;
                 }
-                console.error('username found in local storage',username);
+                console.error('username found in local storage', username);
                 const response = await axios.get(
                     `http://localhost:8083/api/tasks/assignedTo/${username}`
                 );
@@ -45,7 +45,6 @@ const TaskList = () => {
 
     return (
         <div>
-            {/* Show Task List if no task is being updated */}
             {!isUpdating && (
                 <>
                     <h2>Task List</h2>
@@ -55,9 +54,25 @@ const TaskList = () => {
                                 <th style={{ border: '1px solid black', padding: '8px' }}>Task ID</th>
                                 <th style={{ border: '1px solid black', padding: '8px' }}>Title</th>
                                 <th style={{ border: '1px solid black', padding: '8px' }}>Description</th>
-                                <th style={{ border: '1px solid black', padding: '8px' }}>Status</th>
+                                <th
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px',
+                                        width: '8%', // Increased width for Status
+                                    }}
+                                >
+                                    Status
+                                </th>
                                 <th style={{ border: '1px solid black', padding: '8px' }}>Priority</th>
-                                <th style={{ border: '1px solid black', padding: '8px' }}>Due Date</th>
+                                <th
+                                    style={{
+                                        border: '1px solid black',
+                                        padding: '8px',
+                                        width: '9%', // Increased width for Due Date
+                                    }}
+                                >
+                                    Due Date
+                                </th>
                                 <th style={{ border: '1px solid black', padding: '8px' }}>Comments</th>
                                 <th style={{ border: '1px solid black', padding: '8px' }}>Action</th>
                             </tr>
@@ -82,7 +97,6 @@ const TaskList = () => {
                 </>
             )}
 
-            {/* Show Task Update form if isUpdating is true */}
             {isUpdating && selectedTask && (
                 <TaskUpdate task={selectedTask} onClose={handleCloseUpdate} />
             )}

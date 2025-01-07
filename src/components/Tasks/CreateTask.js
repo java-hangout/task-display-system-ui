@@ -76,7 +76,6 @@ const CreateTask = ({ onClose }) => {
 
         // Perform validation before submission
         if (!validateFields()) {
-           // setErrorMessage('Please fill all required fields.');
             return;
         }
 
@@ -135,7 +134,7 @@ const CreateTask = ({ onClose }) => {
                 {successMessage && <div style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>}
                 {errorMessage && <div style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</div>}
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                    {[ 
+                    {[
                         { label: 'Title', name: 'title', type: 'text', value: taskDetails.title },
                         { label: 'Description', name: 'description', type: 'textarea', value: taskDetails.description },
                         { label: 'Assigned To', name: 'assignedToUserName', type: 'text', value: taskDetails.assignedToUserName },
@@ -221,18 +220,16 @@ const CreateTask = ({ onClose }) => {
                         }}>
                             Create Task
                         </button>
-                        {onClose && (
-                            <button type="button" onClick={onClose} style={{
-                                padding: '10px 20px',
-                                backgroundColor: '#6c757d',
-                                color: '#fff',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                            }}>
-                                Cancel
-                            </button>
-                        )}
+                        <button type="button" onClick={onClose} style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#6c757d',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                        }}>
+                            Cancel
+                        </button>
                     </div>
                 </form>
             </div>
