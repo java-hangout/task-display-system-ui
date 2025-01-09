@@ -6,7 +6,8 @@ const ITDashboard = () => {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isNoTasksAvailable, setIsNoTasksAvailable] = useState(false);
 
-  useEffect(() => {
+  // Function to fetch task data
+  const fetchTaskData = () => {
     fetch('http://localhost:8083/api/tasks/fetch/all')
       .then((response) => response.json())
       .then((data) => {
@@ -48,11 +49,24 @@ const ITDashboard = () => {
         setIsNoTasksAvailable(tasksInProgress.length === 0);
       })
       .catch((error) => console.error('Error fetching tasks:', error));
+  };
+
+  useEffect(() => {
+    // Fetch task data when the component is mounted
+    fetchTaskData();
+
+    // Auto-refresh the page every 60 seconds (60000 ms)
+    const refreshInterval = setInterval(() => {
+      window.location.reload();
+    }, 60000); // Refresh every minute
+
+    // Clean up the refresh interval when the component unmounts
+    return () => clearInterval(refreshInterval);
   }, []);
 
   useEffect(() => {
     // Only set the interval if there are tasks in progress
-    const interval = setInterval(() => {
+    const taskScrollInterval = setInterval(() => {
       if (!isNoTasksAvailable && taskData.length > 0) {
         setCurrentTaskIndex((prevIndex) => {
           // Loop over task titles continuously
@@ -62,7 +76,8 @@ const ITDashboard = () => {
       }
     }, 5000); // Change task every 5 seconds
 
-    return () => clearInterval(interval);
+    // Clean up the task scroll interval
+    return () => clearInterval(taskScrollInterval);
   }, [taskData, isNoTasksAvailable]);
 
   return (
