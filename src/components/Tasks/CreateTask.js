@@ -7,7 +7,7 @@ const CreateTask = ({ onClose }) => {
         description: '',
         assignedToUserName: '',
         dueDate: '',
-        status: 'Open',   // Default value
+        status: 'To-Do',   // Default value
         priority: 'Low',  // Default value
         comments: '',
     });
@@ -109,7 +109,7 @@ const CreateTask = ({ onClose }) => {
                 description: '',
                 assignedToUserName: taskDetails.assignedToUserName,
                 dueDate: '',
-                status: 'Open',  // Reset to default
+                status: 'To-Do',  // Reset to default
                 priority: 'Low', // Reset to default
                 comments: '',
             });
@@ -139,7 +139,7 @@ const CreateTask = ({ onClose }) => {
                         { label: 'Description', name: 'description', type: 'textarea', value: taskDetails.description },
                         { label: 'Assigned To', name: 'assignedToUserName', type: 'text', value: taskDetails.assignedToUserName },
                         { label: 'Due Date', name: 'dueDate', type: 'datetime-local', value: taskDetails.dueDate },
-                        { label: 'Status', name: 'status', type: 'select', value: taskDetails.status, options: ['Open', 'In Progress', 'Completed'] },
+                        { label: 'Status', name: 'status', type: 'select', value: taskDetails.status, options: ['To-Do', 'In-Development', 'Done'] },
                         { label: 'Priority', name: 'priority', type: 'select', value: taskDetails.priority, options: ['Low', 'Medium', 'High'] },
                         { label: 'Comments', name: 'comments', type: 'textarea', value: taskDetails.comments },
                     ].map(({ label, name, type, value, options }) => (
