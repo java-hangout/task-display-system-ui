@@ -94,7 +94,7 @@ const ITDashboard = () => {
               <th className="done">Done</th>
               <th className="inDevelopment">In-Development</th>
               <th className="toDo">To-Do</th>
-              <th>In-Development Task Title</th>
+              <th>In-Development Tasks</th>
             </tr>
           </thead>
           <tbody>
