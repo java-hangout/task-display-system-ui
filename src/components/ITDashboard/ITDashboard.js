@@ -14,7 +14,10 @@ const ITDashboard = () => {
 
         // Initialize the task counts and task titles per department
         data.forEach((task) => {
-          const { departmentName, status, title } = task;
+          const { departmentName, status, title, dueDate } = task;
+
+          // Ensure that 'dueDate' exists and is a valid date
+          const isOverdue = dueDate && new Date(dueDate) < new Date();
 
           if (!departmentTaskCounts[departmentName]) {
             departmentTaskCounts[departmentName] = {
@@ -30,7 +33,8 @@ const ITDashboard = () => {
             departmentTaskCounts[departmentName].done += 1;
           } else if (status === 'In-Development') {
             departmentTaskCounts[departmentName].inDevelopment += 1;
-            departmentTaskCounts[departmentName].titles.push(title);
+            // Add task title and its overdue status to titles array
+            departmentTaskCounts[departmentName].titles.push({ title, isOverdue });
           } else if (status === 'To-Do') {
             departmentTaskCounts[departmentName].toDo += 1;
           }
@@ -50,7 +54,11 @@ const ITDashboard = () => {
     // Only set the interval if there are tasks in progress
     const interval = setInterval(() => {
       if (!isNoTasksAvailable && taskData.length > 0) {
-        setCurrentTaskIndex((prevIndex) => prevIndex + 1);
+        setCurrentTaskIndex((prevIndex) => {
+          // Loop over task titles continuously
+          const totalTasks = taskData.flatMap(([_, counts]) => counts.titles).length;
+          return (prevIndex + 1) % totalTasks;
+        });
       }
     }, 5000); // Change task every 5 seconds
 
@@ -85,8 +93,14 @@ const ITDashboard = () => {
                   <div className="scrolling-content">
                     {/* Check if the department has any tasks */}
                     {counts.titles.length > 0 ? (
-                      <div className="active">
-                        {counts.titles[currentTaskIndex % counts.titles.length]}
+                      <div
+                        className={`active ${
+                          counts.titles[currentTaskIndex % counts.titles.length].isOverdue
+                            ? 'overdue'
+                            : ''
+                        }`}
+                      >
+                        {counts.titles[currentTaskIndex % counts.titles.length].title}
                       </div>
                     ) : (
                       <div className="no-task">No tasks in progress</div>

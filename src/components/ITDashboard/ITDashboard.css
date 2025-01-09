@@ -124,7 +124,7 @@
   visibility: visible;
   text-align: center;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: normal;
   color: #999;
 }
 
@@ -167,3 +167,24 @@
     font-size: 1.5rem;
   }
 }
+/* Overdue Task Styling */
+.overdue {
+  color: red; /* Overdue tasks will appear in red */
+}
+
+/* Default task styling - no need for change */
+.scrolling-content div.active {
+  visibility: visible;
+  font-size: 1.1rem;
+  font-weight: normal;
+}
+
+.scrolling-content div.no-task {
+  visibility: visible;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #999;
+}
+
+
