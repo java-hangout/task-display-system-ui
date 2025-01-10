@@ -22,7 +22,8 @@ const DepartmentList = () => {
     }, []); // Run only once when the component mounts
 
     const renderUsers = (userIds) => {
-        if (userIds.length === 0) {
+        // Ensure userIds is an array, even if it's null or undefined
+        if (!Array.isArray(userIds) || userIds.length === 0) {
             return <span>No users assigned</span>;
         }
         return (
@@ -60,10 +61,18 @@ const DepartmentList = () => {
                     >
                         <thead>
                             <tr>
-                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Department ID</th>
-                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Department Name</th>
-                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Description</th>
-                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Users</th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                    Department ID
+                                </th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                    Department Name
+                                </th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                    Description
+                                </th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                    Users
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
