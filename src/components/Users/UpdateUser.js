@@ -1,33 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TaskUpdate = ({ task, onClose }) => {
-    const [taskData, setTaskData] = useState({ ...task });
+const UserUpdate = ({ user, onClose }) => {
+    const [updatedUser, setUpdatedUser] = useState({ ...user });
+
+    useEffect(() => {
+        setUpdatedUser(user);
+    }, [user]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setTaskData((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setUpdatedUser({ ...updatedUser, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
+        console.log("Updated User:", updatedUser);  // Log the updated user state to check the values
         try {
+            // Make sure that the user object is correctly structured and matches your API
             const response = await axios.put(
-                `http://localhost:8083/api/tasks/update/${task.id}`,
-                taskData,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
+                `http://localhost:8081/api/users/update/${updatedUser.id}`,
+                updatedUser,
+                { headers: { 'Content-Type': 'application/json' } }
             );
-            console.log('Task updated successfully:', response.data);
-            onClose(); // Close the form after successful update
+            console.log('User updated successfully:', response.data);  // Log the response from the server
+            alert('User updated successfully!');
+            onClose(); // Close the update form after saving
         } catch (error) {
-            console.error('Error updating task:', error);
+            console.error('Error updating user:', error);
+            alert('Error updating user!');
         }
     };
 
@@ -41,17 +42,18 @@ const TaskUpdate = ({ task, onClose }) => {
                 borderRadius: '8px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Update Task</h2>
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Update User</h2>
+                <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                     {/* Render Fields */}
                     {[
-                        { label: 'Task ID', name: 'id', type: 'text', value: taskData.id, readOnly: true },
-                        { label: 'Title', name: 'title', type: 'text', value: taskData.title },
-                        { label: 'Description', name: 'description', type: 'textarea', value: taskData.description },
-                        { label: 'Status', name: 'status', type: 'select', value: taskData.status, options: ['To-Do', 'In-Development', 'Done'] },
-                        { label: 'Priority', name: 'priority', type: 'select', value: taskData.priority, options: ['Low', 'Medium', 'High'] },
-                        { label: 'Due Date', name: 'dueDate', type: 'datetime-local', value: taskData.dueDate },
-                        { label: 'Comments', name: 'comments', type: 'textarea', value: taskData.comments },
+                        { label: 'User ID', name: 'id', type: 'text', value: updatedUser.id, readOnly: true },
+                        { label: 'Username', name: 'userName', type: 'text', value: updatedUser.userName },
+                        { label: 'Email', name: 'emailId', type: 'email', value: updatedUser.emailId },
+                        { label: 'First Name', name: 'firstName', type: 'text', value: updatedUser.firstName },
+                        { label: 'Last Name', name: 'lastName', type: 'text', value: updatedUser.lastName },
+                        { label: 'Role', name: 'role', type: 'select', value: updatedUser.role, options: ['USER', 'ADMIN'] },
+                        { label: 'Password', name: 'password', type: 'password', value: updatedUser.password },
+                        { label: 'Department ID', name: 'departmentId', type: 'text', value: updatedUser.departmentId },
                     ].map(({ label, name, type, value, readOnly, options }) => (
                         <div key={name} style={{
                             display: 'flex',
@@ -66,21 +68,7 @@ const TaskUpdate = ({ task, onClose }) => {
                             }}>
                                 {label}:
                             </label>
-                            {type === 'textarea' ? (
-                                <textarea
-                                    name={name}
-                                    value={value}
-                                    onChange={handleInputChange}
-                                    rows="3"
-                                    style={{
-                                        flex: 1,
-                                        padding: '8px',
-                                        borderRadius: '4px',
-                                        border: '1px solid #ccc',
-                                    }}
-                                    readOnly={readOnly}
-                                />
-                            ) : type === 'select' ? (
+                            {type === 'select' ? (
                                 <select
                                     name={name}
                                     value={value}
@@ -149,4 +137,4 @@ const TaskUpdate = ({ task, onClose }) => {
     );
 };
 
-export default TaskUpdate;
+export default UserUpdate;

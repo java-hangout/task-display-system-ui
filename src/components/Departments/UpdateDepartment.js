@@ -1,102 +1,38 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importing useNavigate hook
 
-const CreateDepartment = ({ onClose }) => {
-    const [departmentDetails, setDepartmentDetails] = useState({
-        departmentName: '',
-        description: '',
-    });
-
-    const [errorMessages, setErrorMessages] = useState({
-        departmentName: '',
-        description: '',
-    });
-
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const navigate = useNavigate();  // Initializing the navigate hook
+const UpdateDepartment = ({ department, onClose }) => {
+    const [departmentData, setDepartmentData] = useState({ ...department });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setDepartmentDetails((prevDetails) => ({
-            ...prevDetails,
+        setDepartmentData((prevState) => ({
+            ...prevState,
             [name]: value,
         }));
-
-        // Clear error messages on field change
-        setErrorMessages((prevMessages) => ({
-            ...prevMessages,
-            [name]: value ? '' : 'This field is required',
-        }));
-    };
-
-    const validateFields = () => {
-        let isValid = true;
-        let errors = { ...errorMessages };
-
-        // Field-level validation
-        if (!departmentDetails.departmentName) {
-            errors.departmentName = 'Department Name is required';
-            isValid = false;
-        }
-        if (!departmentDetails.description) {
-            errors.description = 'Description is required';
-            isValid = false;
-        }
-
-        setErrorMessages(errors);
-        return isValid;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Perform validation before submission
-        if (!validateFields()) {
-            return;
-        }
-
-        const token = localStorage.getItem('token'); // Retrieve the token
-
-        if (!token) {
-            setErrorMessage('No token found. Please log in.');
-            return;
-        }
-
         try {
-            const response = await axios.post(
-                'http://localhost:8082/api/departments/create', // Adjust API endpoint if needed
-                {
-                    departmentName: departmentDetails.departmentName,
-                    description: departmentDetails.description,
-                },
+            const response = await axios.put(
+                `http://localhost:8082/api/departments/update/${department.id}`,
+                departmentData,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 }
             );
-            console.log('Department created successfully:', response.data);
-            setSuccessMessage(`Department created successfully! ID: ${response.data.id}`);
-            setErrorMessage('');
-            setDepartmentDetails({
-                departmentName: '',
-                description: '',
-            });
+            console.log('Department updated successfully:', response.data);
+            onClose(); // Close the form after successful update
         } catch (error) {
-            console.error('Error creating department:', error);
-            setErrorMessage('Failed to create department. Please try again.');
-            setSuccessMessage('');
+            console.error('Error updating department:', error);
         }
     };
 
-    const handleCancel = () => {
-        // Navigate back to department list page (you can replace '/departments' with your actual list route)
-        navigate('/departments'); 
-    };
+    // Handle null or undefined userIds
+    const userIds = Array.isArray(departmentData.userIds) ? departmentData.userIds : [];
 
     return (
         <div style={{ padding: '20px' }}>
@@ -108,14 +44,15 @@ const CreateDepartment = ({ onClose }) => {
                 borderRadius: '8px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Create Department</h2>
-                {successMessage && <div style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>}
-                {errorMessage && <div style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</div>}
+                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Update Department</h2>
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                    {/* Render Fields */}
                     {[ 
-                        { label: 'Department Name', name: 'departmentName', type: 'text', value: departmentDetails.departmentName },
-                        { label: 'Description', name: 'description', type: 'textarea', value: departmentDetails.description },
-                    ].map(({ label, name, type, value }) => (
+                        { label: 'Department ID', name: 'id', type: 'text', value: departmentData.id, readOnly: true },
+                        { label: 'Department Name', name: 'departmentName', type: 'text', value: departmentData.departmentName },
+                        { label: 'Description', name: 'description', type: 'textarea', value: departmentData.description },
+                        // Removed Manager ID and User IDs fields from the form
+                    ].map(({ label, name, type, value, readOnly }) => (
                         <div key={name} style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -141,6 +78,7 @@ const CreateDepartment = ({ onClose }) => {
                                         borderRadius: '4px',
                                         border: '1px solid #ccc',
                                     }}
+                                    readOnly={readOnly}
                                 />
                             ) : (
                                 <input
@@ -154,12 +92,13 @@ const CreateDepartment = ({ onClose }) => {
                                         borderRadius: '4px',
                                         border: '1px solid #ccc',
                                     }}
+                                    readOnly={readOnly}
                                 />
                             )}
-                            {errorMessages[name] && <div style={{ color: 'red', fontSize: '12px' }}>{errorMessages[name]}</div>}
                         </div>
                     ))}
 
+                    {/* Buttons */}
                     <div style={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -173,11 +112,11 @@ const CreateDepartment = ({ onClose }) => {
                             borderRadius: '4px',
                             cursor: 'pointer',
                         }}>
-                            Create
+                            Update
                         </button>
-                        <button type="button" onClick={handleCancel} style={{
+                        <button type="button" onClick={onClose} style={{
                             padding: '10px 20px',
-                            backgroundColor: '#ff4d4f',
+                            backgroundColor: '#6c757d',
                             color: '#fff',
                             border: 'none',
                             borderRadius: '4px',
@@ -192,4 +131,4 @@ const CreateDepartment = ({ onClose }) => {
     );
 };
 
-export default CreateDepartment;
+export default UpdateDepartment;

@@ -11,6 +11,8 @@ const Dashboard = () => {
     const { logout } = useContext(AuthContext);
     const [activePage, setActivePage] = useState('taskList'); // Tracks the active page ('taskList' or 'createTask')
     const [taskCreationResponse, setTaskCreationResponse] = useState(null); // Stores the task creation response
+    const [isUserActivitiesOpen, setIsUserActivitiesOpen] = useState(true); // State for expanding/collapsing user activities
+    const [isAdminActivitiesOpen, setIsAdminActivitiesOpen] = useState(true); // State for expanding/collapsing admin activities
 
     // Retrieve the logged-in username and role from localStorage
     const username = localStorage.getItem('username');
@@ -22,33 +24,36 @@ const Dashboard = () => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
             {/* Header */}
             <header
                 style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    backgroundColor: '#f4f6f8',
-                    padding: '10px 20px',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    backgroundColor: '#4A90E2', // Soft Blue background
+                    padding: '20px 30px',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                     margin: '0',
                     position: 'sticky',
                     top: 0,
                     zIndex: 1,
+                    color: 'white',
+                    borderBottom: '2px solid #1C2B4C', // Darker blue border for better contrast
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <h2 style={{ margin: 0, fontSize: '16px' }}>
+                    <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>
                         {username ? `Hello, ${username.toUpperCase()}` : 'Welcome to the Task Display System'}
                     </h2>
                 </div>
                 <h1
                     style={{
                         margin: 0,
-                        fontSize: '20px',
+                        fontSize: '22px',
                         textAlign: 'center',
                         flexGrow: 1,
+                        fontWeight: 'bold',
                         cursor: 'default',
                     }}
                 >
@@ -59,11 +64,15 @@ const Dashboard = () => {
                     style={{
                         backgroundColor: '#ff4d4f',
                         color: 'white',
-                        padding: '8px 16px',
+                        padding: '12px 20px',
                         border: 'none',
-                        borderRadius: '4px',
+                        borderRadius: '30px',
                         cursor: 'pointer',
+                        fontWeight: 'bold',
+                        transition: 'background-color 0.3s ease',
                     }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = '#d44f4f'}
+                    onMouseOut={(e) => e.target.style.backgroundColor = '#ff4d4f'}
                 >
                     Logout
                 </button>
@@ -74,155 +83,218 @@ const Dashboard = () => {
                 {/* Menu Section */}
                 <aside
                     style={{
-                        width: '220px',
-                        backgroundColor: '#f4f6f8',
+                        width: '250px',
+                        backgroundColor: '#F7F9FC', // Lighter background for menu for a cleaner look
                         padding: '20px',
-                        borderRight: '1px solid #ccc',
+                        borderRight: '2px solid #E0E7FF', // Soft border for better separation
                         position: 'fixed',
-                        top: '60px',
+                        top: '80px',
                         bottom: '0',
                         left: '0',
                         overflowY: 'auto',
-                        boxShadow: '2px 0px 5px rgba(0, 0, 0, 0.1)',
+                        boxShadow: '2px 0px 8px rgba(0, 0, 0, 0.1)',
                     }}
                 >
-                    <h3 style={{ marginBottom: '20px', textAlign: 'center' }}>Menu</h3>
+                    <h3 style={{ marginBottom: '20px', textAlign: 'center', color: '#333' }}>Menu</h3>
                     <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
-                        <li style={{ marginBottom: '10px' }}>
-                            <button
-                                onClick={() => setActivePage('taskList')}
+                        {/* User Activities */}
+                        <div style={{ marginBottom: '30px' }}>
+                            <h4
                                 style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    backgroundColor: activePage === 'taskList' ? '#e6f7ff' : 'transparent',
-                                    border: 'none',
-                                    color: activePage === 'taskList' ? '#007bff' : '#000',
-                                    textDecoration: 'none',
-                                    padding: '10px 15px',
-                                    borderRadius: '4px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    marginBottom: '10px',
                                     cursor: 'pointer',
-                                    width: '100%',
-                                    textAlign: 'left',
+                                    color: '#1E88E5', // Subtle color for header
+                                    transition: 'color 0.3s',
                                 }}
+                                onClick={() => setIsUserActivitiesOpen(!isUserActivitiesOpen)}
                             >
-                                <span style={{ marginRight: '10px' }}>📋</span>
-                                Task List
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => setActivePage('createTask')}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    backgroundColor: activePage === 'createTask' ? '#e6f7ff' : 'transparent',
-                                    border: 'none',
-                                    color: activePage === 'createTask' ? '#007bff' : '#000',
-                                    textDecoration: 'none',
-                                    padding: '10px 15px',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    width: '100%',
-                                    textAlign: 'left',
-                                }}
-                            >
-                                <span style={{ marginRight: '10px' }}>➕</span>
-                                Create Task
-                            </button>
-                        </li>
-                        {userRole === 'ADMIN' && ( // Conditionally render if the user is an admin
-                            <>
-                                <li>
-                                    <button
-                                        onClick={() => setActivePage('userList')}
+                                User Activities
+                                <span
+                                    style={{
+                                        float: 'right',
+                                        transition: 'transform 0.3s',
+                                        transform: isUserActivitiesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    }}
+                                >
+                                    &#9660; {/* Down arrow symbol */}
+                                </span>
+                            </h4>
+                            {isUserActivitiesOpen && (
+                                <div style={{ marginTop: '10px' }}>
+                                    <li style={{ marginBottom: '15px' }}>
+                                        <button
+                                            onClick={() => setActivePage('taskList')}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                backgroundColor: activePage === 'taskList' ? '#E3F2FD' : 'transparent',
+                                                color: activePage === 'taskList' ? '#1E88E5' : '#555',
+                                                padding: '12px 20px',
+                                                border: 'none',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                                textAlign: 'left',
+                                                fontWeight: '500',
+                                                transition: 'background-color 0.3s ease, color 0.3s ease',
+                                            }}
+                                        >
+                                            <span style={{ marginRight: '15px' }}>📋</span>
+                                            Task Details
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            onClick={() => setActivePage('createTask')}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                backgroundColor: activePage === 'createTask' ? '#E3F2FD' : 'transparent',
+                                                color: activePage === 'createTask' ? '#1E88E5' : '#555',
+                                                padding: '12px 20px',
+                                                border: 'none',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                                textAlign: 'left',
+                                                fontWeight: '500',
+                                                transition: 'background-color 0.3s ease, color 0.3s ease',
+                                            }}
+                                        >
+                                            <span style={{ marginRight: '15px' }}>➕</span>
+                                            Create Task
+                                        </button>
+                                    </li>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Admin Activities */}
+                        {userRole === 'ADMIN' && (
+                            <div style={{ marginTop: '30px' }}>
+                                <h4
+                                    style={{
+                                        fontSize: '16px',
+                                        fontWeight: '600',
+                                        marginBottom: '10px',
+                                        cursor: 'pointer',
+                                        color: '#1E88E5',
+                                        transition: 'color 0.3s',
+                                    }}
+                                    onClick={() => setIsAdminActivitiesOpen(!isAdminActivitiesOpen)}
+                                >
+                                    Admin Activities
+                                    <span
                                         style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            backgroundColor: activePage === 'userList' ? '#e6f7ff' : 'transparent',
-                                            border: 'none',
-                                            color: activePage === 'userList' ? '#007bff' : '#000',
-                                            textDecoration: 'none',
-                                            padding: '10px 15px',
-                                            borderRadius: '4px',
-                                            cursor: 'pointer',
-                                            width: '100%',
-                                            textAlign: 'left',
+                                            float: 'right',
+                                            transition: 'transform 0.3s',
+                                            transform: isAdminActivitiesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                         }}
                                     >
-                                        <span style={{ marginRight: '10px' }}>👥</span>
-                                        User List
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        onClick={() => setActivePage('registerUser')}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            backgroundColor: activePage === 'registerUser' ? '#e6f7ff' : 'transparent',
-                                            border: 'none',
-                                            color: activePage === 'registerUser' ? '#007bff' : '#000',
-                                            textDecoration: 'none',
-                                            padding: '10px 15px',
-                                            borderRadius: '4px',
-                                            cursor: 'pointer',
-                                            width: '100%',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span style={{ marginRight: '10px' }}>📝</span>
-                                        Register User
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        onClick={() => setActivePage('departmentList')}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            backgroundColor: activePage === 'departmentList' ? '#e6f7ff' : 'transparent',
-                                            border: 'none',
-                                            color: activePage === 'departmentList' ? '#007bff' : '#000',
-                                            textDecoration: 'none',
-                                            padding: '10px 15px',
-                                            borderRadius: '4px',
-                                            cursor: 'pointer',
-                                            width: '100%',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span style={{ marginRight: '10px' }}>🏢</span>
-                                        Department List
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        onClick={() => setActivePage('createDepartment')}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            backgroundColor: activePage === 'createDepartment' ? '#e6f7ff' : 'transparent',
-                                            border: 'none',
-                                            color: activePage === 'createDepartment' ? '#007bff' : '#000',
-                                            textDecoration: 'none',
-                                            padding: '10px 15px',
-                                            borderRadius: '4px',
-                                            cursor: 'pointer',
-                                            width: '100%',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span style={{ marginRight: '10px' }}>🏗️</span>
-                                        Create Department
-                                    </button>
-                                </li>
-                            </>
+                                        &#9660; {/* Down arrow symbol */}
+                                    </span>
+                                </h4>
+                                {isAdminActivitiesOpen && (
+                                    <div style={{ marginTop: '10px' }}>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('userList')}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'userList' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'userList' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>👥</span>
+                                                User List
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('registerUser')}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'registerUser' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'registerUser' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>📝</span>
+                                                Register User
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('departmentList')}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'departmentList' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'departmentList' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>🏢</span>
+                                                Department List
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('createDepartment')}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'createDepartment' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'createDepartment' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>🏗️</span>
+                                                Create Department
+                                            </button>
+                                        </li>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </ul>
                 </aside>
 
                 {/* Main Section */}
-                <main style={{ flex: 1, padding: '20px', marginLeft: '240px', overflowY: 'auto', marginTop: '60px' }}>
+                <main style={{ flex: 1, padding: '20px', marginLeft: '270px', overflowY: 'auto', marginTop: '80px' }}>
                     {activePage === 'taskList' && !taskCreationResponse && (
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <div style={{ width: '100%', maxWidth: '1200px' }}>
@@ -241,18 +313,10 @@ const Dashboard = () => {
                             onClose={handleCloseCreateTask} // Pass the onClose prop
                         />
                     )}
-                    {activePage === 'userList' && userRole === 'ADMIN' && ( // Show UserList page if user is an admin
-                        <UserList />
-                    )}
-                    {activePage === 'registerUser' && userRole === 'ADMIN' && ( // Show RegisterUser page if user is an admin
-                        <RegisterUser />
-                    )}
-                    {activePage === 'departmentList' && userRole === 'ADMIN' && ( // Show DepartmentList page if user is an admin
-                        <DepartmentList />
-                    )}
-                    {activePage === 'createDepartment' && userRole === 'ADMIN' && ( // Show CreateDepartment if user is an admin
-                        <CreateDepartment />
-                    )}
+                    {activePage === 'userList' && userRole === 'ADMIN' && <UserList />}
+                    {activePage === 'registerUser' && userRole === 'ADMIN' && <RegisterUser />}
+                    {activePage === 'departmentList' && userRole === 'ADMIN' && <DepartmentList />}
+                    {activePage === 'createDepartment' && userRole === 'ADMIN' && <CreateDepartment />}
                     {taskCreationResponse && (
                         <div
                             style={{
@@ -270,7 +334,7 @@ const Dashboard = () => {
                                 style={{
                                     marginTop: '10px',
                                     padding: '10px 20px',
-                                    backgroundColor: '#007bff',
+                                    backgroundColor: '#1E88E5',
                                     color: 'white',
                                     border: 'none',
                                     borderRadius: '4px',
@@ -288,10 +352,12 @@ const Dashboard = () => {
             <footer
                 style={{
                     textAlign: 'center',
-                    backgroundColor: '#f4f6f8',
-                    padding: '10px',
+                    backgroundColor: '#1E88E5', // Increased color saturation for footer
+                    padding: '15px',
                     fontSize: '14px',
-                    borderTop: '1px solid #ccc',
+                    color: 'white',
+                    fontWeight: '600',
+                    borderTop: '2px solid #1C2B4C', // Darker blue border to match header
                     position: 'sticky',
                     bottom: 0,
                     zIndex: 1,

@@ -1,70 +1,79 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import UserUpdate from './UpdateUser'; // Ensure you have the UserUpdate component
 
 const UserList = () => {
-    const [users, setUsers] = useState([]); // State to hold the list of users
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(null); // Error state
+    const [users, setUsers] = useState([]);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
-    // Fetch user data from the backend
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:8081/api/users/fetch/all');
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch users');
-                }
-
-                const data = await response.json();
-                setUsers(data); // Set the users data to the state
-                setLoading(false); // Set loading to false after data is fetched
+                const response = await axios.get('http://localhost:8081/api/users/fetch/all');
+                setUsers(response.data);
             } catch (error) {
-                setError(error.message); // Set error message if fetch fails
-                setLoading(false); // Set loading to false even if an error occurs
+                console.error('Error fetching users:', error);
             }
         };
 
-        fetchUsers(); // Call the function to fetch users
-    }, []); // Empty dependency array means this effect runs once when the component mounts
+        fetchUsers();
+    }, []);
 
-    if (loading) {
-        return <p>Loading users...</p>;
-    }
+    const handleUpdateClick = (user) => {
+        setSelectedUser(user);
+        setIsUpdating(true);
+    };
 
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
+    const handleCloseUpdate = () => {
+        setIsUpdating(false);
+        setSelectedUser(null);
+    };
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
             <div style={{ width: '100%', maxWidth: '1200px' }}>
-                <h2 style={{ textAlign: 'center' }}>User List</h2>
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>ID</th>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Username</th>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Email</th>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>First Name</th>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Last Name</th>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Role</th>
-                            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user.id}>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.id}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.userName}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.emailId}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.firstName}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.lastName}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.role}</td>
-                                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{user.status}</td>
+                {/* Only show the "User List" label if we're not in updating mode */}
+                {!isUpdating && <h2 style={{ textAlign: 'center' }}>User List</h2>}
+
+                {!isUpdating && (
+                    <table
+                        style={{
+                            borderCollapse: 'collapse',
+                            width: '100%',
+                            margin: '20px 0',
+                            border: '1px solid #ddd',
+                            textAlign: 'left',
+                        }}
+                    >
+                        <thead>
+                            <tr style={{ border: '1px solid black' }}>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>User ID</th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Username</th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Email</th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Role</th>
+                                <th style={{ border: '1px solid black', padding: '8px' }}>Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id} style={{ border: '1px solid black' }}>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>{user.id}</td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>{user.userName}</td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>{user.emailId}</td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>{user.role}</td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        <button onClick={() => handleUpdateClick(user)}>Update</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+
+                {isUpdating && selectedUser && (
+                    <UserUpdate user={selectedUser} onClose={handleCloseUpdate} />
+                )}
             </div>
         </div>
     );

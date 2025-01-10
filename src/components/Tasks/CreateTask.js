@@ -218,7 +218,7 @@ const CreateTask = ({ onClose }) => {
                             borderRadius: '4px',
                             cursor: 'pointer',
                         }}>
-                            Create Task
+                            Create
                         </button>
                         <button type="button" onClick={onClose} style={{
                             padding: '10px 20px',

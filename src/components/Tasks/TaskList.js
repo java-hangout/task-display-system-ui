@@ -46,7 +46,9 @@ const TaskList = () => {
     return (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
             <div style={{ width: '100%', maxWidth: '1200px' }}>
-                <h2 style={{ textAlign: 'center' }}>Task List</h2>
+                {/* Only show the "Task List" label if we're not in updating mode */}
+                {!isUpdating && <h2 style={{ textAlign: 'center' }}>Task List</h2>}
+                
                 {!isUpdating && (
                     <table
                         style={{

@@ -250,7 +250,7 @@ const RegisterUser = () => {
                             borderRadius: '4px',
                             cursor: 'pointer',
                         }}>
-                            Register User
+                            Register
                         </button>
 
                         <button type="button" onClick={handleCancel} style={{

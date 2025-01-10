@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import DepartmentUpdate from './UpdateDepartment'; // Assuming you have the UpdateDepartment component
 
 const DepartmentList = () => {
     const [departments, setDepartments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
 
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
                 const response = await axios.get('http://localhost:8082/api/departments/fetch/all');
-                setDepartments(response.data); // Set the fetched departments
-                setLoading(false); // Set loading to false after the data is fetched
+                setDepartments(response.data);
+                setLoading(false);
             } catch (err) {
                 setError(err.message);
                 setLoading(false);
@@ -19,10 +22,9 @@ const DepartmentList = () => {
         };
 
         fetchDepartments();
-    }, []); // Run only once when the component mounts
+    }, []); // Run once on component mount
 
     const renderUsers = (userIds) => {
-        // Ensure userIds is an array, even if it's null or undefined
         if (!Array.isArray(userIds) || userIds.length === 0) {
             return <span>No users assigned</span>;
         }
@@ -33,6 +35,16 @@ const DepartmentList = () => {
                 ))}
             </ul>
         );
+    };
+
+    const handleUpdateClick = (department) => {
+        setSelectedDepartment(department);
+        setIsUpdating(true);
+    };
+
+    const handleCloseUpdate = () => {
+        setIsUpdating(false);
+        setSelectedDepartment(null);
     };
 
     if (loading) {
@@ -46,10 +58,9 @@ const DepartmentList = () => {
     return (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
             <div style={{ width: '100%', maxWidth: '1200px' }}>
-                <h2 style={{ textAlign: 'center' }}>Department List</h2>
-                {departments.length === 0 ? (
-                    <p>No departments available.</p>
-                ) : (
+                {!isUpdating && <h2 style={{ textAlign: 'center' }}>Department List</h2>}
+
+                {!isUpdating && (
                     <table
                         style={{
                             borderCollapse: 'collapse',
@@ -73,6 +84,9 @@ const DepartmentList = () => {
                                 <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                                     Users
                                 </th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,10 +104,17 @@ const DepartmentList = () => {
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
                                         {renderUsers(department.userIds)}
                                     </td>
+                                    <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                        <button onClick={() => handleUpdateClick(department)} >Update</button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                )}
+
+                {isUpdating && selectedDepartment && (
+                    <DepartmentUpdate department={selectedDepartment} onClose={handleCloseUpdate} />
                 )}
             </div>
         </div>
