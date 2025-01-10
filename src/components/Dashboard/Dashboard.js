@@ -142,7 +142,7 @@ const Dashboard = () => {
                                             }}
                                         >
                                             <span style={{ marginRight: '15px' }}>📋</span>
-                                            Task Details
+                                            Task List
                                         </button>
                                     </li>
                                     <li>
