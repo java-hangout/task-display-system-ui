@@ -67,7 +67,7 @@ const CreateDepartment = ({ onClose }) => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8083/api/departments/create', // Adjust API endpoint if needed
+                'http://localhost:8082/api/departments/create', // Adjust API endpoint if needed
                 {
                     departmentName: departmentDetails.departmentName,
                     description: departmentDetails.description,
