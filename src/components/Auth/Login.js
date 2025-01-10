@@ -9,24 +9,44 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            // Step 1: Fetch user details to get the role dynamically
+            const userResponse = await fetch(`http://localhost:8081/api/users/fetch/username/${credentials.username}`);
+
+            if (!userResponse.ok) {
+                setError('Failed to fetch user details.');
+                return;
+            }
+
+            const userData = await userResponse.json();
+            const userRole = userData.role; // Extract the role
+
+            // Store role in localStorage if it is not already there
+            localStorage.setItem('role', userRole);
+
+            // Step 2: Use the role for login request
+            const loginResponse = await fetch('http://localhost:8080/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...credentials, role: 'ROLE_USER' }),
+                body: JSON.stringify({
+                    ...credentials,
+                    role: userRole, // Pass the dynamically fetched role
+                }),
             });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
+
+            if (!loginResponse.ok) {
+                const errorData = await loginResponse.json();
                 console.error('Login error response:', errorData);
                 setError(errorData.message || 'Invalid username or password');
                 return;
             }
-    
-            const data = await response.json();
-    
-            if (data.token) {
-                login(data.token);
+
+            const loginData = await loginResponse.json();
+
+            if (loginData.token) {
+                // Step 3: Store token and username in localStorage
+                login(loginData.token);
                 localStorage.setItem('username', credentials.username); // Store username in local storage
+                localStorage.setItem('token', loginData.token); // Store token in localStorage
             } else {
                 setError('Login failed. Token not received.');
             }
@@ -35,7 +55,6 @@ const Login = () => {
             setError('Failed to login. Please try again later.');
         }
     };
-    
 
     return (
         <div className="login-container">

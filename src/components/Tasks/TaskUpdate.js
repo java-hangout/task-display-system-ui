@@ -48,7 +48,7 @@ const TaskUpdate = ({ task, onClose }) => {
                         { label: 'Task ID', name: 'id', type: 'text', value: taskData.id, readOnly: true },
                         { label: 'Title', name: 'title', type: 'text', value: taskData.title },
                         { label: 'Description', name: 'description', type: 'textarea', value: taskData.description },
-                        { label: 'Status', name: 'status', type: 'select', value: taskData.status, options: ['To-Do', 'In-Development', 'Completed'] },
+                        { label: 'Status', name: 'status', type: 'select', value: taskData.status, options: ['To-Do', 'In-Development', 'Done'] },
                         { label: 'Priority', name: 'priority', type: 'select', value: taskData.priority, options: ['Low', 'Medium', 'High'] },
                         { label: 'Due Date', name: 'dueDate', type: 'datetime-local', value: taskData.dueDate },
                         { label: 'Comments', name: 'comments', type: 'textarea', value: taskData.comments },

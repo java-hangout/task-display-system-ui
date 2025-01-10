@@ -15,7 +15,7 @@ const TaskList = () => {
                     console.error('No username found in local storage');
                     return;
                 }
-                console.error('username found in local storage', username);
+                console.log('username found in local storage', username);
                 const response = await axios.get(
                     `http://localhost:8083/api/tasks/assignedTo/${username}`
                 );
@@ -44,21 +44,29 @@ const TaskList = () => {
     };
 
     return (
-        <div>
-            {!isUpdating && (
-                <>
-                    <h2>Task List</h2>
-                    <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+            <div style={{ width: '100%', maxWidth: '1200px' }}>
+                <h2 style={{ textAlign: 'center' }}>Task List</h2>
+                {!isUpdating && (
+                    <table
+                        style={{
+                            borderCollapse: 'collapse',
+                            width: '100%',
+                            margin: '20px 0',
+                            border: '1px solid #ddd',
+                            textAlign: 'left',
+                        }}
+                    >
                         <thead>
                             <tr style={{ border: '1px solid black' }}>
-                                <th style={{ border: '1px solid black', padding: '8px' }}>Task ID</th>
-                                <th style={{ border: '1px solid black', padding: '8px' }}>Title</th>
-                                <th style={{ border: '1px solid black', padding: '8px' }}>Description</th>
+                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Task ID</th>
+                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Title</th>
+                                <th style={{ border: '1px solid black', padding: '8px',textAlign: 'center' }}>Description</th>
                                 <th
                                     style={{
                                         border: '1px solid black',
-                                        padding: '8px',
-                                        width: '8%', // Increased width for Status
+                                        padding: '8px',textAlign: 'center',
+                                        width: '11%', // Increased width for Status
                                     }}
                                 >
                                     Status
@@ -67,7 +75,7 @@ const TaskList = () => {
                                 <th
                                     style={{
                                         border: '1px solid black',
-                                        padding: '8px',
+                                        padding: '8px',textAlign: 'center',
                                         width: '9%', // Increased width for Due Date
                                     }}
                                 >
@@ -80,13 +88,27 @@ const TaskList = () => {
                         <tbody>
                             {tasks.map((task) => (
                                 <tr key={task.id} style={{ border: '1px solid black' }}>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{task.id}</td>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{task.title}</td>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{task.description}</td>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{task.status}</td>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{task.priority}</td>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{formatDate(task.dueDate)}</td>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>{task.comments}</td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {task.id}
+                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {task.title}
+                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {task.description}
+                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {task.status}
+                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {task.priority}
+                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {formatDate(task.dueDate)}
+                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>
+                                        {task.comments}
+                                    </td>
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
                                         <button onClick={() => handleUpdateClick(task)}>Update</button>
                                     </td>
@@ -94,12 +116,11 @@ const TaskList = () => {
                             ))}
                         </tbody>
                     </table>
-                </>
-            )}
-
-            {isUpdating && selectedTask && (
-                <TaskUpdate task={selectedTask} onClose={handleCloseUpdate} />
-            )}
+                )}
+                {isUpdating && selectedTask && (
+                    <TaskUpdate task={selectedTask} onClose={handleCloseUpdate} />
+                )}
+            </div>
         </div>
     );
 };

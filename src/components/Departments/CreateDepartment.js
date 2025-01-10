@@ -1,39 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Importing useNavigate hook
 
-const CreateTask = ({ onClose }) => {
-    const [taskDetails, setTaskDetails] = useState({
-        title: '',
+const CreateDepartment = ({ onClose }) => {
+    const [departmentDetails, setDepartmentDetails] = useState({
+        departmentName: '',
         description: '',
-        assignedToUserName: '',
-        dueDate: '',
-        status: 'To-Do',   // Default value
-        priority: 'Low',  // Default value
-        comments: '',
     });
 
     const [errorMessages, setErrorMessages] = useState({
-        title: '',
+        departmentName: '',
         description: '',
-        assignedToUserName: '',
-        dueDate: '',
     });
 
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Fetch logged-in username from local storage
-    useEffect(() => {
-        const username = localStorage.getItem('username'); // Assume username is stored during login
-        setTaskDetails((prevDetails) => ({
-            ...prevDetails,
-            assignedToUserName: username || '', // Default to empty if no username found
-        }));
-    }, []);
+    const navigate = useNavigate();  // Initializing the navigate hook
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setTaskDetails((prevDetails) => ({
+        setDepartmentDetails((prevDetails) => ({
             ...prevDetails,
             [name]: value,
         }));
@@ -50,20 +37,12 @@ const CreateTask = ({ onClose }) => {
         let errors = { ...errorMessages };
 
         // Field-level validation
-        if (!taskDetails.title) {
-            errors.title = 'Title is required';
+        if (!departmentDetails.departmentName) {
+            errors.departmentName = 'Department Name is required';
             isValid = false;
         }
-        if (!taskDetails.description) {
+        if (!departmentDetails.description) {
             errors.description = 'Description is required';
-            isValid = false;
-        }
-        if (!taskDetails.assignedToUserName) {
-            errors.assignedToUserName = 'Assigned To is required';
-            isValid = false;
-        }
-        if (!taskDetails.dueDate) {
-            errors.dueDate = 'Due Date is required';
             isValid = false;
         }
 
@@ -88,11 +67,10 @@ const CreateTask = ({ onClose }) => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8083/api/tasks/create',
+                'http://localhost:8083/api/departments/create', // Adjust API endpoint if needed
                 {
-                    ...taskDetails,
-                    createdDate: new Date().toISOString(),
-                    updatedDate: new Date().toISOString(),
+                    departmentName: departmentDetails.departmentName,
+                    description: departmentDetails.description,
                 },
                 {
                     headers: {
@@ -101,23 +79,23 @@ const CreateTask = ({ onClose }) => {
                     },
                 }
             );
-            console.log('Task created successfully:', response.data);
-            setSuccessMessage(`Task created successfully! ID: ${response.data.id}`);
+            console.log('Department created successfully:', response.data);
+            setSuccessMessage(`Department created successfully! ID: ${response.data.id}`);
             setErrorMessage('');
-            setTaskDetails({
-                title: '',
+            setDepartmentDetails({
+                departmentName: '',
                 description: '',
-                assignedToUserName: taskDetails.assignedToUserName,
-                dueDate: '',
-                status: 'To-Do',  // Reset to default
-                priority: 'Low', // Reset to default
-                comments: '',
             });
         } catch (error) {
-            console.error('Error creating task:', error);
-            setErrorMessage('Failed to create task. Please try again.');
+            console.error('Error creating department:', error);
+            setErrorMessage('Failed to create department. Please try again.');
             setSuccessMessage('');
         }
+    };
+
+    const handleCancel = () => {
+        // Navigate back to department list page (you can replace '/departments' with your actual list route)
+        navigate('/departments'); 
     };
 
     return (
@@ -130,19 +108,14 @@ const CreateTask = ({ onClose }) => {
                 borderRadius: '8px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             }}>
-                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Create Task</h2>
+                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Create Department</h2>
                 {successMessage && <div style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>}
                 {errorMessage && <div style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</div>}
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                    {[
-                        { label: 'Title', name: 'title', type: 'text', value: taskDetails.title },
-                        { label: 'Description', name: 'description', type: 'textarea', value: taskDetails.description },
-                        { label: 'Assigned To', name: 'assignedToUserName', type: 'text', value: taskDetails.assignedToUserName },
-                        { label: 'Due Date', name: 'dueDate', type: 'datetime-local', value: taskDetails.dueDate },
-                        { label: 'Status', name: 'status', type: 'select', value: taskDetails.status, options: ['To-Do', 'In-Development', 'Done'] },
-                        { label: 'Priority', name: 'priority', type: 'select', value: taskDetails.priority, options: ['Low', 'Medium', 'High'] },
-                        { label: 'Comments', name: 'comments', type: 'textarea', value: taskDetails.comments },
-                    ].map(({ label, name, type, value, options }) => (
+                    {[ 
+                        { label: 'Department Name', name: 'departmentName', type: 'text', value: departmentDetails.departmentName },
+                        { label: 'Description', name: 'description', type: 'textarea', value: departmentDetails.description },
+                    ].map(({ label, name, type, value }) => (
                         <div key={name} style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -169,24 +142,6 @@ const CreateTask = ({ onClose }) => {
                                         border: '1px solid #ccc',
                                     }}
                                 />
-                            ) : type === 'select' ? (
-                                <select
-                                    name={name}
-                                    value={value}
-                                    onChange={handleInputChange}
-                                    style={{
-                                        flex: 1,
-                                        padding: '8px',
-                                        borderRadius: '4px',
-                                        border: '1px solid #ccc',
-                                    }}
-                                >
-                                    {options.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </select>
                             ) : (
                                 <input
                                     type={type}
@@ -218,9 +173,9 @@ const CreateTask = ({ onClose }) => {
                             borderRadius: '4px',
                             cursor: 'pointer',
                         }}>
-                            Create Task
+                            Create Department
                         </button>
-                        <button type="button" onClick={onClose} style={{
+                        <button type="button" onClick={handleCancel} style={{
                             padding: '10px 20px',
                             backgroundColor: '#ff4d4f',
                             color: '#fff',
@@ -237,4 +192,4 @@ const CreateTask = ({ onClose }) => {
     );
 };
 
-export default CreateTask;
+export default CreateDepartment;
