@@ -1,9 +1,12 @@
+// src/App.js
+
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
 import Login from './components/Auth/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 import ITDashboard from './components/ITDashboard/ITDashboard';
+import ITDeptSpecificDashboard from './components/ITDashboard/ITDeptSpecificDashboard'; // Import the new department-specific component
 
 const App = () => {
     const { authState } = useContext(AuthContext); // Access context
@@ -13,7 +16,10 @@ const App = () => {
             <Routes>
                 {/* Public route for IT Dashboard */}
                 <Route path="/dashboard" element={<ITDashboard />} />
-
+                
+                {/* Department-specific dashboard route */}
+                <Route path="/dashboard/:departmentName" element={<ITDeptSpecificDashboard />} />
+                
                 {/* Static route for login or authenticated dashboard */}
                 <Route
                     path="/"

@@ -1,0 +1,215 @@
+/* General styling */
+.dashboard-container {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .dashboard-header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  
+  .dashboard-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+    display: inline-block;
+    animation: scrollText 15s linear infinite;
+  }
+  
+  @keyframes scrollText {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  /* Main content area */
+  .main-content {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  
+  /* Table styling */
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #dee2e6;
+  }
+  
+  .dashboard-table th {
+    background-color: #14889fe1;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .dashboard-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .dashboard-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Column-specific colors */
+  .done {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .inDevelopment {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  .toDo {
+    background-color: #ffc107;
+    color: white;
+  }
+  
+  /* Task Titles Styling */
+  .scrolling-column {
+    position: relative;
+    overflow: hidden;
+    height: 3rem; /* Adjust height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .scrolling-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: scrollTasks 10s ease-in-out infinite; /* Smooth scroll for multiple tasks */
+    animation-delay: 5s; /* 5-second delay before starting the scroll */
+  }
+  
+  .scrolling-content div {
+    height: 3rem;
+    line-height: 3rem;
+    display: block;
+    text-align: center;
+    visibility: hidden;
+    transition: visibility 0.5s ease;
+  }
+  
+  .scrolling-content div.active {
+    visibility: visible; /* Only show the active task */
+  }
+  
+  .scrolling-content div.no-task {
+    visibility: visible;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #999;
+  }
+  
+  /* Animation for scrolling tasks (Bottom to Top scroll) */
+  @keyframes scrollTasks {
+    0% {
+      transform: translateY(100%);
+    }
+    20% {
+      transform: translateY(0);
+    }
+    80% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+  
+  /* Footer styling */
+  .dashboard-footer {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-table th,
+    .dashboard-table td {
+      padding: 8px;
+      font-size: 0.8rem;
+    }
+  
+    .dashboard-title {
+      font-size: 1.5rem;
+    }
+  }
+  
+  /* Overdue Task Styling */
+  .overdue {
+    color: red; /* Overdue tasks will appear in red */
+  }
+  
+  /* Default task styling - no need for change */
+  .scrolling-content div.active {
+    visibility: visible;
+    font-size: 1.1rem;
+    font-weight: normal;
+  }
+  
+  .scrolling-content div.no-task {
+    visibility: visible;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #999;
+  }
+  
+  /* Chart container size adjustment */
+  .chart-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Make chart section height 80% of the viewport height */
+    width: 90%;
+  }
+  
+  .chart-container {
+    width: 80%; /* Chart will take 90% of the width */
+    height: 40%; /* Chart height will be 70% of the section height */
+  }
+  
+  @media (max-width: 768px) {
+    .chart-section {
+      height: 60vh; /* On smaller screens, the chart section takes less height */
+    }
+  
+    .chart-container {
+      width: 85%;
+      height: 40%;
+    }
+  }
+  
