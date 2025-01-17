@@ -1,118 +1,208 @@
-/* Rewards Section Heading */
 /* Overall Section */
 .rewards-section {
     background: linear-gradient(145deg, #00bcd4, #3f51b5); /* Gradient background */
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
     max-width: 100%;
     margin: 20px auto;
     font-family: 'Arial', sans-serif;
-    height: 40%; /* Reduced height to 40% */
-    overflow: hidden; /* Prevent any overflow */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    position: relative; /* This will serve as a reference for the falling stars and followers */
 }
 
-/* Heading */
-.rewards-heading {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+/* Falling Stars and Followers Animation */
+@keyframes fallStarsAndFollowers {
+    0% {
+        top: -10%;
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
 }
 
-/* Card-style Reward Item */
+/* Add falling stars using pseudo-elements */
+.rewards-section::before, .rewards-section::after {
+    content: " ";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    animation: fallStarsAndFollowers 3s infinite ease-in-out;
+    pointer-events: none; /* Prevent interaction with stars */
+}
+
+.rewards-section::before {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.rewards-section::after {
+    right: 20%;
+    animation-delay: 1s;
+}
+
+/* Add falling followers (hearts or user icons) */
+.follower {
+    position: absolute;
+    background-image: url('https://image.shutterstock.com/image-vector/follower-icon-vector-illustration-600w-1709682416.jpg'); /* Example icon URL */
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 20px; /* Size of the icon */
+    height: 20px; /* Size of the icon */
+    animation: fallStarsAndFollowers 3s infinite ease-in-out;
+    pointer-events: none;
+}
+
+.follower:nth-child(odd) {
+    left: 30%; /* Randomize horizontal position for variety */
+    animation-delay: 0.5s;
+}
+
+.follower:nth-child(even) {
+    right: 30%; /* Randomize horizontal position for variety */
+    animation-delay: 1s;
+}
+
+/* Certificate Image */
+.certificate-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -30px;
+}
+
+/* Logo with continuous zoom-in and zoom-out animation */
+.reward-logo {
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for image */
+    animation: zoomEffect 5s infinite ease-in-out; /* Continuous zoom effect */
+}
+
+/* Keyframes for continuous zoom-in and zoom-out effect */
+@keyframes zoomEffect {
+    0% {
+        transform: scale(1); /* Initial scale */
+    }
+    50% {
+        transform: scale(1.1); /* Zoom-in effect */
+    }
+    100% {
+        transform: scale(1); /* Zoom-out effect */
+    }
+}
+
+/* Reward Card and Table Styling */
 .reward-card {
-    background-color: white;
+    background-color: #ffffff;
     border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    flex-grow: 1;
+    margin-right: 30px;
+    width: 100%;
+    min-width: 500px;
+    overflow: hidden; /* Prevents overflow if the content is large */
 }
 
-/* Table styling */
+/* Reward Details Table */
 .reward-details-table {
     width: 100%;
     border-collapse: collapse;
+    font-size: 1.1rem; /* Slightly smaller font size for better readability */
+    color: #333; /* Default color for text */
 }
 
-.reward-details-table td {
-    padding: 2px 2px;
-    font-size: 1rem;
-    color: #333333;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: middle;
-}
-
-/* Keys styling (label of the data) */
+/* Styling for keys (labels) */
 .reward-details-table td strong {
-    color: #4caf50; /* Green color for the key (info button color) */
+    font-size: 1.3rem; /* Larger font size for labels */
+    font-weight: 600;
+    color: #000000; /* Black color for the keys (username, reward type, reason, reward id, date, etc.) */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-right: 20px; /* Spacing between label and value */
 }
 
-/* Values styling (actual data values) */
+/* Styling for values (buttons) */
 .reward-details-table td button {
-    color: #333333; /* Normal color for the values */
-    background: none;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    color: #333; /* Dark text color for the button */
+    background-color: #f9e02f; /* Light yellow background for values */
     border: none;
-    font-weight: normal; /* Keep the value text normal weight */
+    border-radius: 20px;
     cursor: pointer;
-    transition: color 0.3s ease; /* Smooth transition for hover effect */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Button shadow for depth */
+    transition: all 0.3s ease;
 }
 
-/* Hover effect for values */
+/* Button hover effect */
 .reward-details-table td button:hover {
-    color: #e64a19; /* Darker orange color for hover */
-}
-
-/* Buttons for info keys and values */
-.info-button {
-    background-color: #4caf50; /* Green color for info button */
-    color: #fff;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-
-.info-button:hover {
-    background-color: #45a049; /* Slightly darker green for hover */
+    background-color: #f8d600; /* Darker yellow on hover */
+    transform: translateY(-3px); /* Slight lift effect */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
 
 /* Tag Buttons */
 .tag-button {
-    background-color: #ff9800; /* Orange color */
+    background-color: #ff9800;
     color: #fff;
-    padding: 8px 15px;
+    padding: 8px 20px;
     border: none;
     border-radius: 25px;
     font-size: 1rem;
-    margin-right: 8px;
+    margin-right: 12px;
     margin-top: 5px;
-    transition: background-color 0.3s ease;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .tag-button:hover {
-    background-color: #fb8c00; /* Darker orange for hover */
+    background-color: #fb8c00; /* Darker orange on hover */
 }
 
-/* "No Rewards" Section */
-.no-rewards {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #f44336; /* Red for no rewards */
-    font-weight: bold;
-    padding: 20px;
-    background-color: #fff3f3;
-    border-radius: 8px;
-}
-
-/* Add subtle hover effect for reward items */
+/* Reward Item Hover Effect */
 .reward-item:hover {
     transform: translateY(-5px);
     box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+}
+
+/* Reward Details - Additional Styling */
+.no-rewards {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #f44336;
+    padding: 20px;
+    background-color: #fff3f3;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Improve the Heading Style */
+.rewards-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: left;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Gradient Border around the Reward Card */
+.reward-card {
+    border: 3px solid transparent;
+    background-image: linear-gradient(white, white), radial-gradient(circle at top left, #00bcd4, #3f51b5);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
 }

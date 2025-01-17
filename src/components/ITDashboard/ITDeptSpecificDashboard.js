@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./ITDeptSpecificDashboard.css";
+import oneSavingBankLogo from './oneSavingBankLogo.png';
 
 const ITDeptSpecificDashboard = () => {
     const { departmentName } = useParams();
@@ -106,7 +107,6 @@ const ITDeptSpecificDashboard = () => {
 
             <main className="main-content">
                 <div className="content-wrapper">
-                    {/* Table and rewards section in flex layout */}
                     <div className="dashboard-flex">
                         {/* Task Table Section */}
                         <div className="table-section">
@@ -149,58 +149,61 @@ const ITDeptSpecificDashboard = () => {
                             </table>
                         </div>
 
+                        {/* Rewards Section */}
                         <div className="rewards-section">
-                            <h3 className="rewards-heading">Rewards & Recognitions</h3>
-                            {rewards.length > 0 ? (
-                                <div className="reward-item show">
-                                    <div className="reward-card">
-                                        <table className="reward-details-table">
-                                            <tbody>
-                                                <tr>
-                                                    <td><button className="info-button"><strong>Username:</strong></button></td>
-                                                    <td><button className="info-button">{rewards[currentRewardIndex].userName}</button></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><button className="info-button"><strong>Reward Type:</strong></button></td>
-                                                    <td><button className="info-button">{rewards[currentRewardIndex].rewardType}</button></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><button className="info-button"><strong>Reason:</strong></button></td>
-                                                    <td><button className="info-button">{rewards[currentRewardIndex].reason}</button></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><button className="info-button"><strong>Rewarded By:</strong></button></td>
-                                                    <td><button className="info-button">{rewards[currentRewardIndex].rewardedBy}</button></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><button className="info-button"><strong>Date:</strong></button></td>
-                                                    <td><button className="info-button">{rewards[currentRewardIndex].rewardDate}</button></td>
-                                                </tr>
-                                                {/* <tr>
-                                                    <td><button className="info-button"><strong>Points:</strong></button></td>
-                                                    <td><button className="info-button">{rewards[currentRewardIndex].metadata.points}</button></td>
-                                                </tr> */}
-                                                <tr>
-                                                    <td><button className="info-button"><strong>Tags:</strong></button></td>
-                                                    <td>
-                                                        {rewards[currentRewardIndex].tags.length > 0 ? (
-                                                            rewards[currentRewardIndex].tags.map((tag, index) => (
-                                                                <button className="tag-button" key={index}>{tag}</button>
-                                                            ))
-                                                        ) : (
-                                                            <span>No tags available</span>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                            <div className="rewards-left">
+                                <h3 className="rewards-heading">Rewards & Recognitions</h3>
+                                {rewards.length > 0 ? (
+                                    <div className="reward-item show">
+                                        <div className="reward-card">
+                                            <table className="reward-details-table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><button className="info-button">Name:</button></td>
+                                                        <td><button className="info-button"><strong>{rewards[currentRewardIndex].userName}</strong></button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><button className="info-button">Reward Type:</button></td>
+                                                        <td><button className="info-button"><strong>{rewards[currentRewardIndex].rewardType}</strong></button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><button className="info-button">Reason:</button></td>
+                                                        <td><button className="info-button"><strong>{rewards[currentRewardIndex].reason}</strong></button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><button className="info-button">Rewarded By:</button></td>
+                                                        <td><button className="info-button">{rewards[currentRewardIndex].rewardedBy}</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><button className="info-button">Date:</button></td>
+                                                        <td><button className="info-button">{rewards[currentRewardIndex].rewardDate}</button></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><button className="info-button">Tags:</button></td>
+                                                        <td>
+                                                            {rewards[currentRewardIndex].tags.length > 0 ? (
+                                                                rewards[currentRewardIndex].tags.map((tag, index) => (
+                                                                    <button className="tag-button" key={index}>{tag}</button>
+                                                                ))
+                                                            ) : (
+                                                                <span>No tags available</span>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <div className="no-rewards">No rewards found for this department.</div>
-                            )}
-                        </div>
+                                ) : (
+                                    <div className="no-rewards">No rewards found for this department.</div>
+                                )}
+                            </div>
 
+                            {/* Certificate Image */}
+                            <div className="certificate-image">
+                                <img src={oneSavingBankLogo}  alt="Certificate Logo" className="reward-logo" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
