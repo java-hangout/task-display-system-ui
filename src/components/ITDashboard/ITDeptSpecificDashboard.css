@@ -1,231 +1,118 @@
-/* General styling */
-.dashboard-container {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
+/* Rewards Section Heading */
+/* Overall Section */
+.rewards-section {
+    background: linear-gradient(145deg, #00bcd4, #3f51b5); /* Gradient background */
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    max-width: 100%;
+    margin: 20px auto;
+    font-family: 'Arial', sans-serif;
+    height: 40%; /* Reduced height to 40% */
+    overflow: hidden; /* Prevent any overflow */
 }
 
-.dashboard-header {
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.dashboard-title {
-    font-size: 1.8rem;
+/* Heading */
+.rewards-heading {
+    font-size: 1.5rem;
     font-weight: bold;
-    margin: 0;
-    display: inline-block;
-    animation: scrollText 15s linear infinite;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
-@keyframes scrollText {
-    0% {
-        transform: translateX(100%);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
-}
-
-/* Main content area */
-.main-content {
-    max-width: 1200px;
-    margin: 30px auto;
+/* Card-style Reward Item */
+.reward-card {
+    background-color: white;
+    border-radius: 15px;
     padding: 20px;
-    overflow-x: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Table styling */
-.dashboard-table {
+.reward-details-table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-table th,
-.dashboard-table td {
-    padding: 10px;
-    text-align: center;
-    border: 2px solid #dee2e6;
-}
-
-.dashboard-table th {
-    background-color: #14889fe1;
-    color: white;
-    font-weight: bold;
-}
-
-.dashboard-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-.dashboard-table tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Rewards Section Styling */
-.rewards-section {
-    position: relative;
-    background: linear-gradient(135deg, #f1f1f1, #f7f7f7);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.rewards-section h3 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #3b3b3b;
-    text-align: center;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
-    animation: slideIn 0.5s ease-out;
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.reward-item {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.reward-item.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.reward-item .username {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 5px;
-}
-
-.reward-item .rewardedBy,
-.reward-item .rewardDate,
-.reward-item .points,
-.reward-item .tags {
+.reward-details-table td {
+    padding: 2px 2px;
     font-size: 1rem;
-    color: #7f8c8d;
-    margin-bottom: 10px;
+    color: #333333;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
 }
 
-.reward-item .rewardedBy,
-.reward-item .rewardDate {
-    font-weight: 500;
+/* Keys styling (label of the data) */
+.reward-details-table td strong {
+    color: #4caf50; /* Green color for the key (info button color) */
 }
 
-.reward-item .tags {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+/* Values styling (actual data values) */
+.reward-details-table td button {
+    color: #333333; /* Normal color for the values */
+    background: none;
+    border: none;
+    font-weight: normal; /* Keep the value text normal weight */
+    cursor: pointer;
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.reward-item .tags span {
-    background-color: #ff7f50;
-    color: white;
+/* Hover effect for values */
+.reward-details-table td button:hover {
+    color: #e64a19; /* Darker orange color for hover */
+}
+
+/* Buttons for info keys and values */
+.info-button {
+    background-color: #4caf50; /* Green color for info button */
+    color: #fff;
     padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: 500;
-    text-transform: uppercase;
-}
-
-.reward-item .comments {
-    background-color: #f9f9f9;
-    padding: 15px;
+    border: none;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
-.reward-item .comments ul {
-    padding-left: 20px;
-    list-style-type: disc;
-    color: #444;
+.info-button:hover {
+    background-color: #45a049; /* Slightly darker green for hover */
 }
 
-.reward-item .comments li {
-    margin-bottom: 10px;
-    font-size: 0.95rem;
+/* Tag Buttons */
+.tag-button {
+    background-color: #ff9800; /* Orange color */
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    margin-right: 8px;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
-.reward-item .comments li strong {
-    color: #2980b9;
+.tag-button:hover {
+    background-color: #fb8c00; /* Darker orange for hover */
 }
 
-.reward-item .comments li em {
-    font-style: italic;
-    color: #7f8c8d;
-}
-
-/* Footer styling */
-.dashboard-footer {
-    background-color: #007bff;
-    color: white;
+/* "No Rewards" Section */
+.no-rewards {
     text-align: center;
-    padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    font-size: 1.2rem;
+    color: #f44336; /* Red for no rewards */
+    font-weight: bold;
+    padding: 20px;
+    background-color: #fff3f3;
+    border-radius: 8px;
 }
 
-/* Hover effects */
+/* Add subtle hover effect for reward items */
 .reward-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-}
-
-.reward-item.show:hover {
-    background-color: #f0f8ff;
-}
-
-/* Responsive styling for smaller screens */
-@media (max-width: 768px) {
-    .reward-item {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-
-    .reward-item .tags span {
-        font-size: 0.9rem;
-        padding: 6px 12px;
-    }
-
-    .reward-item .username {
-        font-size: 1.1rem;
-    }
-
-    .reward-item .rewardedBy,
-    .reward-item .rewardDate,
-    .reward-item .points {
-        font-size: 0.9rem;
-    }
 }

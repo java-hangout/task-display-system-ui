@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./ITDeptSpecificDashboard.css";
 
@@ -10,6 +10,7 @@ const ITDeptSpecificDashboard = () => {
     const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
     const [currentRewardIndex, setCurrentRewardIndex] = useState(0);
 
+    // Fetch task data
     const fetchTaskData = () => {
         fetch("http://localhost:8083/api/tasks/fetch/all")
             .then((response) => response.json())
@@ -52,6 +53,7 @@ const ITDeptSpecificDashboard = () => {
             .catch((error) => console.error("Error fetching tasks:", error));
     };
 
+    // Fetch rewards data
     const fetchRewards = () => {
         fetch(`http://localhost:8081/api/rewards/fetch/department/${departmentName}`)
             .then((response) => response.json())
@@ -66,6 +68,7 @@ const ITDeptSpecificDashboard = () => {
         fetchRewards();
     }, [departmentName]);
 
+    // Automatically scroll through tasks
     useEffect(() => {
         if (!isNoTasksAvailable && taskData.length > 0) {
             const taskScrollInterval = setInterval(() => {
@@ -81,6 +84,7 @@ const ITDeptSpecificDashboard = () => {
         }
     }, [taskData, isNoTasksAvailable]);
 
+    // Automatically scroll through rewards
     useEffect(() => {
         if (rewards.length > 0) {
             const rewardScrollInterval = setInterval(() => {
@@ -130,7 +134,7 @@ const ITDeptSpecificDashboard = () => {
                                                             className={`active ${counts.titles[currentTaskIndex % counts.titles.length].isOverdue
                                                                 ? 'overdue'
                                                                 : ''
-                                                            }`}
+                                                                }`}
                                                         >
                                                             {counts.titles[currentTaskIndex % counts.titles.length].title}
                                                         </div>
@@ -145,69 +149,58 @@ const ITDeptSpecificDashboard = () => {
                             </table>
                         </div>
 
-                        {/* Rewards and Recognition Section */}
                         <div className="rewards-section">
-                            <h3>Rewards & Recognitions</h3>
+                            <h3 className="rewards-heading">Rewards & Recognitions</h3>
                             {rewards.length > 0 ? (
                                 <div className="reward-item show">
-                                    <table className="reward-details-table">
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Username:</strong></td>
-                                                <td>{rewards[currentRewardIndex].userName}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Reward Type:</strong></td>
-                                                <td>{rewards[currentRewardIndex].rewardType}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Reason:</strong></td>
-                                                <td>{rewards[currentRewardIndex].reason}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Rewarded By:</strong></td>
-                                                <td>{rewards[currentRewardIndex].rewardedBy}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Date:</strong></td>
-                                                <td>{rewards[currentRewardIndex].rewardDate}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Points:</strong></td>
-                                                <td>{rewards[currentRewardIndex].metadata.points}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Tags:</strong></td>
-                                                <td>
-                                                    {rewards[currentRewardIndex].tags.length > 0 ? (
-                                                        rewards[currentRewardIndex].tags.map((tag, index) => (
-                                                            <span className="tag" key={index}>{tag}</span>
-                                                        ))
-                                                    ) : (
-                                                        <span>No tags available</span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                            {rewards[currentRewardIndex].comments.length > 0 && (
+                                    <div className="reward-card">
+                                        <table className="reward-details-table">
+                                            <tbody>
                                                 <tr>
-                                                    <td><strong>Comments:</strong></td>
+                                                    <td><button className="info-button"><strong>Username:</strong></button></td>
+                                                    <td><button className="info-button">{rewards[currentRewardIndex].userName}</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button className="info-button"><strong>Reward Type:</strong></button></td>
+                                                    <td><button className="info-button">{rewards[currentRewardIndex].rewardType}</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button className="info-button"><strong>Reason:</strong></button></td>
+                                                    <td><button className="info-button">{rewards[currentRewardIndex].reason}</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button className="info-button"><strong>Rewarded By:</strong></button></td>
+                                                    <td><button className="info-button">{rewards[currentRewardIndex].rewardedBy}</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button className="info-button"><strong>Date:</strong></button></td>
+                                                    <td><button className="info-button">{rewards[currentRewardIndex].rewardDate}</button></td>
+                                                </tr>
+                                                {/* <tr>
+                                                    <td><button className="info-button"><strong>Points:</strong></button></td>
+                                                    <td><button className="info-button">{rewards[currentRewardIndex].metadata.points}</button></td>
+                                                </tr> */}
+                                                <tr>
+                                                    <td><button className="info-button"><strong>Tags:</strong></button></td>
                                                     <td>
-                                                        {rewards[currentRewardIndex].comments.map((comment, index) => (
-                                                            <div key={index}>
-                                                                <em>{comment.commentDate}</em>
-                                                                <strong>{comment.commentedBy}</strong>: {comment.comment}
-                                                            </div>
-                                                        ))}
+                                                        {rewards[currentRewardIndex].tags.length > 0 ? (
+                                                            rewards[currentRewardIndex].tags.map((tag, index) => (
+                                                                <button className="tag-button" key={index}>{tag}</button>
+                                                            ))
+                                                        ) : (
+                                                            <span>No tags available</span>
+                                                        )}
                                                     </td>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="no-rewards">No rewards found for this department.</div>
                             )}
                         </div>
+
                     </div>
                 </div>
             </main>
