@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react'; 
 import { AuthContext } from '../../context/AuthContext';
 import TaskList from '../Tasks/TaskList';
 import CreateTask from '../Tasks/CreateTask';
@@ -172,7 +172,7 @@ const Dashboard = () => {
                         </div>
 
                         {/* Admin Activities */}
-                        {userRole === 'ADMIN' && (
+                        {(userRole === 'ADMIN' || userRole === 'SUPER ADMIN') && (
                             <div style={{ marginTop: '30px' }}>
                                 <h4
                                     style={{
@@ -304,67 +304,23 @@ const Dashboard = () => {
                             </div>
                         </div>
                     )}
-                    {activePage === 'createTask' && (
-                        <CreateTask
-                            onTaskCreated={(response) => {
-                                setTaskCreationResponse(response);
-                                setActivePage('taskList'); // Redirect back to TaskList
-                            }}
-                            onClose={handleCloseCreateTask} // Pass the onClose prop
-                        />
+                    {activePage === 'createTask' && !taskCreationResponse && (
+                        <CreateTask onClose={handleCloseCreateTask} />
                     )}
-                    {activePage === 'userList' && userRole === 'ADMIN' && <UserList />}
-                    {activePage === 'registerUser' && userRole === 'ADMIN' && <RegisterUser />}
-                    {activePage === 'departmentList' && userRole === 'ADMIN' && <DepartmentList />}
-                    {activePage === 'createDepartment' && userRole === 'ADMIN' && <CreateDepartment />}
-                    {taskCreationResponse && (
-                        <div
-                            style={{
-                                marginTop: '20px',
-                                padding: '20px',
-                                backgroundColor: '#e6f7ff',
-                                border: '1px solid #91d5ff',
-                                borderRadius: '4px',
-                            }}
-                        >
-                            <h3>Task Created Successfully!</h3>
-                            <pre>{JSON.stringify(taskCreationResponse, null, 2)}</pre>
-                            <button
-                                onClick={() => setTaskCreationResponse(null)}
-                                style={{
-                                    marginTop: '10px',
-                                    padding: '10px 20px',
-                                    backgroundColor: '#1E88E5',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                Back to Task List
-                            </button>
-                        </div>
+                    {activePage === 'userList' && (
+                        <UserList />
+                    )}
+                    {activePage === 'registerUser' && (
+                        <RegisterUser />
+                    )}
+                    {activePage === 'departmentList' && (
+                        <DepartmentList />
+                    )}
+                    {activePage === 'createDepartment' && (
+                        <CreateDepartment />
                     )}
                 </main>
             </div>
-
-            {/* Footer */}
-            <footer
-                style={{
-                    textAlign: 'center',
-                    backgroundColor: '#1E88E5', // Increased color saturation for footer
-                    padding: '15px',
-                    fontSize: '14px',
-                    color: 'white',
-                    fontWeight: '600',
-                    borderTop: '2px solid #1C2B4C', // Darker blue border to match header
-                    position: 'sticky',
-                    bottom: 0,
-                    zIndex: 1,
-                }}
-            >
-                © 2025 OSB Group. All Rights Reserved.
-            </footer>
         </div>
     );
 };
