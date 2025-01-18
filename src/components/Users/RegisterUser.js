@@ -204,6 +204,7 @@ const RegisterUser = () => {
                         >
                             <option value="USER">USER</option>
                             <option value="ADMIN">ADMIN</option>
+                            <option value="SUPERADMIN">SUPER ADMIN</option>
                         </select>
                     </div>
 

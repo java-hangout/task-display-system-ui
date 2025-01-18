@@ -8,6 +8,8 @@ const DepartmentList = () => {
     const [error, setError] = useState('');
     const [isUpdating, setIsUpdating] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [departmentToDelete, setDepartmentToDelete] = useState(null);
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -22,7 +24,7 @@ const DepartmentList = () => {
         };
 
         fetchDepartments();
-    }, []); // Run once on component mount
+    }, []);
 
     const renderUsers = (userIds) => {
         if (!Array.isArray(userIds) || userIds.length === 0) {
@@ -45,6 +47,34 @@ const DepartmentList = () => {
     const handleCloseUpdate = () => {
         setIsUpdating(false);
         setSelectedDepartment(null);
+    };
+
+    const handleDeleteClick = (department) => {
+        setDepartmentToDelete(department);
+        setShowDeleteConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!departmentToDelete) return;
+
+        try {
+            await axios.delete(`http://localhost:8082/api/departments/delete/${departmentToDelete.id}`);
+            alert(`Department "${departmentToDelete.departmentName}" deleted successfully.`);
+            setDepartments((prevDepartments) =>
+                prevDepartments.filter((dept) => dept.id !== departmentToDelete.id)
+            );
+        } catch (error) {
+            alert('Failed to delete department. Please try again.');
+            console.error('Error deleting department:', error);
+        } finally {
+            setShowDeleteConfirm(false);
+            setDepartmentToDelete(null);
+        }
+    };
+
+    const cancelDelete = () => {
+        setShowDeleteConfirm(false);
+        setDepartmentToDelete(null);
     };
 
     if (loading) {
@@ -85,16 +115,17 @@ const DepartmentList = () => {
                                     Users
                                 </th>
                                 <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                                    Action
+                                    Update
+                                </th>
+                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                    Delete
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {departments.map((department) => (
                                 <tr key={department.id}>
-                                    <td style={{ border: '1px solid black', padding: '8px' }}>
-                                        {department.id}
-                                    </td>
+                                    <td style={{ border: '1px solid black', padding: '8px' }}>{department.id}</td>
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
                                         {department.departmentName}
                                     </td>
@@ -104,8 +135,31 @@ const DepartmentList = () => {
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
                                         {renderUsers(department.userIds)}
                                     </td>
+                                    <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center', }}>
+                                        <button style={{
+                                                backgroundColor: '#ff4d4d',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                                padding: '5px 10px',
+                                                cursor: 'pointer',
+                                                backgroundColor: '#007bff'
+                                            }} onClick={() => handleUpdateClick(department)}>Update</button>
+                                    </td>
                                     <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                                        <button onClick={() => handleUpdateClick(department)} >Update</button>
+                                        <button
+                                            style={{
+                                                backgroundColor: '#ff4d4d',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '4px',
+                                                padding: '5px 10px',
+                                                cursor: 'pointer',
+                                            }}
+                                            onClick={() => handleDeleteClick(department)}
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -115,6 +169,69 @@ const DepartmentList = () => {
 
                 {isUpdating && selectedDepartment && (
                     <DepartmentUpdate department={selectedDepartment} onClose={handleCloseUpdate} />
+                )}
+
+                {/* Delete Confirmation Modal */}
+                {showDeleteConfirm && departmentToDelete && (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 1000,
+                        }}
+                    >
+                        <div
+                            style={{
+                                backgroundColor: 'white',
+                                padding: '20px',
+                                borderRadius: '8px',
+                                textAlign: 'center',
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                            }}
+                        >
+                            <h3>Confirm Delete</h3>
+                            <p>
+                                Are you sure you want to delete the department{' '}
+                                <strong>{departmentToDelete.departmentName}</strong>?
+                            </p>
+                            <div style={{ marginTop: '20px' }}>
+                                <button
+                                    style={{
+                                        backgroundColor: '#ff4d4d',
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '10px 20px',
+                                        marginRight: '10px',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={confirmDelete}
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    style={{
+                                        backgroundColor: '#007bff',
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '10px 20px',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={cancelDelete}
+                                >
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>

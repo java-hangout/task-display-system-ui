@@ -51,7 +51,7 @@ const UserUpdate = ({ user, onClose }) => {
                         { label: 'Email', name: 'emailId', type: 'email', value: updatedUser.emailId },
                         { label: 'First Name', name: 'firstName', type: 'text', value: updatedUser.firstName },
                         { label: 'Last Name', name: 'lastName', type: 'text', value: updatedUser.lastName },
-                        { label: 'Role', name: 'role', type: 'select', value: updatedUser.role, options: ['USER', 'ADMIN'] },
+                        { label: 'Role', name: 'role', type: 'select', value: updatedUser.role, options: ['USER', 'ADMIN','SUPER ADMIN'] },
                         { label: 'Password', name: 'password', type: 'password', value: updatedUser.password },
                         { label: 'Department ID', name: 'departmentId', type: 'text', value: updatedUser.departmentId },
                     ].map(({ label, name, type, value, readOnly, options }) => (
