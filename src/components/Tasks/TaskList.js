@@ -112,7 +112,14 @@ const TaskList = () => {
                                         {task.comments}
                                     </td>
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
-                                        <button onClick={() => handleUpdateClick(task)}>Update</button>
+                                        <button style={{
+                                                backgroundColor: '#007bff',
+                                                color: '#fff',
+                                                padding: '5px 10px',
+                                                border: 'none',
+                                                borderRadius: '3px',
+                                                cursor: 'pointer',
+                                            }}  onClick={() => handleUpdateClick(task)}>Update</button>
                                     </td>
                                 </tr>
                             ))}

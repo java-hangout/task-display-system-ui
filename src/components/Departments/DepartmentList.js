@@ -11,6 +11,8 @@ const DepartmentList = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [departmentToDelete, setDepartmentToDelete] = useState(null);
 
+    const userRole = localStorage.getItem('role'); // Get the logged-in user's role from localStorage
+
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
@@ -117,9 +119,12 @@ const DepartmentList = () => {
                                 <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                                     Update
                                 </th>
-                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                                    Delete
-                                </th>
+                                {/* Show Delete button only for SUPERADMIN */}
+                                {userRole === 'SUPER ADMIN' && (
+                                    <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                        Delete
+                                    </th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -135,32 +140,39 @@ const DepartmentList = () => {
                                     <td style={{ border: '1px solid black', padding: '8px' }}>
                                         {renderUsers(department.userIds)}
                                     </td>
-                                    <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center', }}>
-                                        <button style={{
-                                                backgroundColor: '#ff4d4d',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '4px',
-                                                padding: '5px 10px',
-                                                cursor: 'pointer',
-                                                backgroundColor: '#007bff'
-                                            }} onClick={() => handleUpdateClick(department)}>Update</button>
-                                    </td>
                                     <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
                                         <button
                                             style={{
-                                                backgroundColor: '#ff4d4d',
+                                                backgroundColor: '#007bff',
                                                 color: 'white',
                                                 border: 'none',
                                                 borderRadius: '4px',
                                                 padding: '5px 10px',
                                                 cursor: 'pointer',
                                             }}
-                                            onClick={() => handleDeleteClick(department)}
+                                            onClick={() => handleUpdateClick(department)}
                                         >
-                                            Delete
+                                            Update
                                         </button>
                                     </td>
+                                    {/* Conditionally render the Delete button */}
+                                    {userRole === 'SUPER ADMIN' && (
+                                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                            <button
+                                                style={{
+                                                    backgroundColor: '#ff4d4d',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '4px',
+                                                    padding: '5px 10px',
+                                                    cursor: 'pointer',
+                                                }}
+                                                onClick={() => handleDeleteClick(department)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>

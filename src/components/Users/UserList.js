@@ -8,6 +8,8 @@ const UserList = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [deletePrompt, setDeletePrompt] = useState({ show: false, user: null });
 
+    const userRole = localStorage.getItem('role'); // Get the logged-in user's role from localStorage
+
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -76,7 +78,10 @@ const UserList = () => {
                                 <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Email</th>
                                 <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Role</th>
                                 <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Update</th>
-                                <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Delete</th>
+                                {/* Show Delete button only for SUPERADMIN */}
+                                {userRole === 'SUPER ADMIN' && (
+                                    <th style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>Delete</th>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
@@ -101,21 +106,24 @@ const UserList = () => {
                                             Update
                                         </button>
                                     </td>
-                                    <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
-                                        <button
-                                            style={{
-                                                backgroundColor: '#ff4d4d',
-                                                color: '#fff',
-                                                padding: '5px 10px',
-                                                border: 'none',
-                                                borderRadius: '3px',
-                                                cursor: 'pointer',
-                                            }}
-                                            onClick={() => handleDeleteClick(user)}
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
+                                    {/* Conditionally render the Delete button */}
+                                    {userRole === 'SUPER ADMIN' && (
+                                        <td style={{ border: '1px solid black', padding: '8px', textAlign: 'center' }}>
+                                            <button
+                                                style={{
+                                                    backgroundColor: '#ff4d4d',
+                                                    color: '#fff',
+                                                    padding: '5px 10px',
+                                                    border: 'none',
+                                                    borderRadius: '3px',
+                                                    cursor: 'pointer',
+                                                }}
+                                                onClick={() => handleDeleteClick(user)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
