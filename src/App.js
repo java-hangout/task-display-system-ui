@@ -7,7 +7,7 @@ import Login from './components/Auth/Login';
 import Dashboard from './components/Dashboard/Dashboard';
 import ITDashboard from './components/ITDashboard/ITDashboard';
 import ITDeptSpecificDashboard from './components/ITDashboard/ITDeptSpecificDashboard'; // Import the new department-specific component
-
+import BusinessunitSpecificDashboard from './components/ITDashboard/BusinessunitSpecificDashboard';
 const App = () => {
     const { authState } = useContext(AuthContext); // Access context
 
@@ -19,6 +19,8 @@ const App = () => {
                 
                 {/* Department-specific dashboard route */}
                 <Route path="/dashboard/:departmentName" element={<ITDeptSpecificDashboard />} />
+
+                <Route path="/bu/dashboard/:businessUnitName" element={<BusinessunitSpecificDashboard />} />
                 
                 {/* Static route for login or authenticated dashboard */}
                 <Route

@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importing useNavigate hook
+import { useNavigate } from 'react-router-dom';
 
 const CreateDepartment = ({ onClose }) => {
     const [departmentDetails, setDepartmentDetails] = useState({
         departmentName: '',
         description: '',
+        businessUnitId: '', // Business Unit ID added
+        parentDeptFlag: false,
+        parentDepartmentId: '',
     });
 
     const [errorMessages, setErrorMessages] = useState({
         departmentName: '',
         description: '',
+        businessUnitId: '',
     });
 
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const navigate = useNavigate();  // Initializing the navigate hook
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -32,6 +36,15 @@ const CreateDepartment = ({ onClose }) => {
         }));
     };
 
+    const handleParentDeptFlagChange = (e) => {
+        const { checked } = e.target;
+        setDepartmentDetails((prevDetails) => ({
+            ...prevDetails,
+            parentDeptFlag: checked,
+            parentDepartmentId: checked ? '' : prevDetails.parentDepartmentId, // Reset parentDepartmentId if parentDeptFlag is true
+        }));
+    };
+
     const validateFields = () => {
         let isValid = true;
         let errors = { ...errorMessages };
@@ -43,6 +56,14 @@ const CreateDepartment = ({ onClose }) => {
         }
         if (!departmentDetails.description) {
             errors.description = 'Description is required';
+            isValid = false;
+        }
+        if (!departmentDetails.businessUnitId) {
+            errors.businessUnitId = 'Business Unit ID is required';
+            isValid = false;
+        }
+        if (!departmentDetails.parentDeptFlag && !departmentDetails.parentDepartmentId) {
+            errors.parentDepartmentId = 'Parent Department ID is required';
             isValid = false;
         }
 
@@ -67,10 +88,17 @@ const CreateDepartment = ({ onClose }) => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8082/api/departments/create', // Adjust API endpoint if needed
+                'http://localhost:8082/api/departments/create',
                 {
                     departmentName: departmentDetails.departmentName,
                     description: departmentDetails.description,
+                    businessUnitId: departmentDetails.businessUnitId,
+                    parentDepartmentId: departmentDetails.parentDeptFlag ? '' : departmentDetails.parentDepartmentId,
+                    userIds: [],
+                    subDepartmentIds: [],
+                    parentDeptFlag: departmentDetails.parentDeptFlag,
+                    createdDate: new Date().toISOString(),
+                    updatedDate: new Date().toISOString(),
                 },
                 {
                     headers: {
@@ -85,6 +113,9 @@ const CreateDepartment = ({ onClose }) => {
             setDepartmentDetails({
                 departmentName: '',
                 description: '',
+                businessUnitId: '',
+                parentDeptFlag: false,
+                parentDepartmentId: '',
             });
         } catch (error) {
             console.error('Error creating department:', error);
@@ -94,77 +125,95 @@ const CreateDepartment = ({ onClose }) => {
     };
 
     const handleCancel = () => {
-        // Navigate back to department list page (you can replace '/departments' with your actual list route)
-        navigate('/departments'); 
+        navigate('/departments');
     };
 
     return (
         <div style={{ padding: '20px' }}>
             <div style={{
-                maxWidth: '800px',
+                maxWidth: '1000px',
                 margin: '0 auto',
                 backgroundColor: '#fff',
-                padding: '20px',
+                padding: '40px',
                 borderRadius: '8px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             }}>
                 <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Create Department</h2>
                 {successMessage && <div style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>}
                 {errorMessage && <div style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</div>}
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                    {[ 
-                        { label: 'Department Name', name: 'departmentName', type: 'text', value: departmentDetails.departmentName },
-                        { label: 'Description', name: 'description', type: 'textarea', value: departmentDetails.description },
-                    ].map(({ label, name, type, value }) => (
-                        <div key={name} style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            marginBottom: '10px',
-                        }}>
-                            <label style={{
-                                flex: '0 0 150px',
-                                fontWeight: 'bold',
-                                textAlign: 'left',
-                            }}>
-                                {label}:
-                            </label>
-                            {type === 'textarea' ? (
-                                <textarea
-                                    name={name}
-                                    value={value}
-                                    onChange={handleInputChange}
-                                    rows="3"
-                                    style={{
-                                        flex: 1,
-                                        padding: '8px',
-                                        borderRadius: '4px',
-                                        border: '1px solid #ccc',
-                                    }}
-                                />
-                            ) : (
-                                <input
-                                    type={type}
-                                    name={name}
-                                    value={value}
-                                    onChange={handleInputChange}
-                                    style={{
-                                        flex: 1,
-                                        padding: '8px',
-                                        borderRadius: '4px',
-                                        border: '1px solid #ccc',
-                                    }}
-                                />
-                            )}
-                            {errorMessages[name] && <div style={{ color: 'red', fontSize: '12px' }}>{errorMessages[name]}</div>}
-                        </div>
-                    ))}
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        marginTop: '20px',
-                    }}>
+{/* Department Name */}
+<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    <label style={{ fontWeight: 'bold', width: '250px' }}>Department Name:</label>
+    <input
+        type="text"
+        name="departmentName"
+        value={departmentDetails.departmentName}
+        onChange={handleInputChange}
+        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '600px' }}  // Reduced width
+    />
+    {errorMessages.departmentName && <div style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>{errorMessages.departmentName}</div>}
+</div>
+
+{/* Description */}
+<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    <label style={{ fontWeight: 'bold', width: '250px' }}>Description:</label>
+    <textarea
+        name="description"
+        value={departmentDetails.description}
+        onChange={handleInputChange}
+        rows="3"
+        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '600px' }}  // Reduced width
+    />
+    {errorMessages.description && <div style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>{errorMessages.description}</div>}
+</div>
+
+{/* Business Unit ID */}
+<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    <label style={{ fontWeight: 'bold', width: '250px' }}>Business Unit ID:</label>
+    <input
+        type="text"
+        name="businessUnitId"
+        value={departmentDetails.businessUnitId}
+        onChange={handleInputChange}
+        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '600px' }}  // Reduced width
+    />
+    {errorMessages.businessUnitId && <div style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>{errorMessages.businessUnitId}</div>}
+</div>
+
+{/* Parent Department Flag */}
+<div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+    <label style={{ fontWeight: 'bold', width: '250px' }}>Is this a parent department?</label>
+    <input
+        type="checkbox"
+        name="parentDeptFlag"
+        checked={departmentDetails.parentDeptFlag}
+        onChange={handleParentDeptFlagChange}
+        style={{ marginLeft: '10px' }}
+    />
+    {errorMessages.parentDeptFlag && <div style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>{errorMessages.parentDeptFlag}</div>}
+</div>
+
+{/* Parent Department ID (conditional display) */}
+{!departmentDetails.parentDeptFlag && (
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+        <label style={{ fontWeight: 'bold', width: '250px' }}>Parent Department ID:</label>
+        <input
+            type="text"
+            name="parentDepartmentId"
+            value={departmentDetails.parentDepartmentId}
+            onChange={handleInputChange}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', width: '600px' }}  // Reduced width
+        />
+        {errorMessages.parentDepartmentId && <div style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>{errorMessages.parentDepartmentId}</div>}
+    </div>
+)}
+
+
+
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
                         <button type="submit" style={{
                             padding: '10px 20px',
                             backgroundColor: '#007bff',

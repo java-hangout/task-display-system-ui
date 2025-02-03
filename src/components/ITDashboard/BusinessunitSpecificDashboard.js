@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'; // Hook to get URL parameters
 import { Bar } from 'react-chartjs-2'; // Importing Bar chart component from Chart.js
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'; // Import necessary Chart.js components
 import './ITDashboard.css'; // Import updated CSS
@@ -13,15 +14,16 @@ ChartJS.register(
   Legend
 );
 
-const ITDashboard = () => {
+const BusinessunitSpecificDashboard  = () => {
+  const { businessUnitName } = useParams(); // Get the businessUnitName from the URL
   const [taskData, setTaskData] = useState([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isNoTasksAvailable, setIsNoTasksAvailable] = useState(false);
   const [showTable, setShowTable] = useState(true); // State to toggle between table and chart
 
-  // Fetch task data
+  // Fetch task data based on businessUnitName
   const fetchTaskData = () => {
-    fetch('http://localhost:8083/api/tasks/fetch/all')
+    fetch(`http://localhost:8083/api/tasks/fetch/businessUnitName/${businessUnitName}`)
       .then((response) => response.json())
       .then((data) => {
         const departmentTaskCounts = {};
@@ -61,7 +63,9 @@ const ITDashboard = () => {
 
   // Fetch data when component mounts
   useEffect(() => {
-    fetchTaskData();
+    if (businessUnitName) {
+      fetchTaskData();
+    }
 
     // Refresh page every minute
     const refreshInterval = setInterval(() => {
@@ -69,7 +73,7 @@ const ITDashboard = () => {
     }, 60000); // Refresh every minute
 
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, [businessUnitName]); // Only re-run when businessUnitName changes
 
   // Change between table and chart every 30 seconds
   useEffect(() => {
@@ -125,7 +129,7 @@ const ITDashboard = () => {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <div className="dashboard-title">OSB Group Task Dashboard</div>
+        <div className="dashboard-title">{businessUnitName} Business Unit Task Dashboard</div>
       </header>
 
       <main className="main-content">
@@ -187,4 +191,4 @@ const ITDashboard = () => {
   );
 };
 
-export default ITDashboard;
+export default BusinessunitSpecificDashboard;

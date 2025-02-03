@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react'; 
-import { AuthContext } from '../../context/AuthContext';
-import TaskList from '../Tasks/TaskList';
-import CreateTask from '../Tasks/CreateTask';
+import { AuthContext } from '../../context/AuthContext'; 
+import TaskList from '../Tasks/TaskList'; 
+import CreateTask from '../Tasks/CreateTask'; 
 import UserList from '../Users/UserList'; // Import the UserList component
 import DepartmentList from '../Departments/DepartmentList'; // Import the DepartmentList component
 import CreateDepartment from '../Departments/CreateDepartment'; // Import the CreateDepartment component
 import RegisterUser from '../Users/RegisterUser'; // Import the RegisterUser component
+import CreateBusinessUnit from '../BusinessUnit/CreateBusinessUnit'; // Import the CreateBusinessUnit component
 
 const Dashboard = () => {
     const { logout } = useContext(AuthContext);
@@ -57,7 +58,7 @@ const Dashboard = () => {
                         cursor: 'default',
                     }}
                 >
-                    Task Display System Dashboard
+                    Task Display System
                 </h1>
                 <button
                     onClick={logout}
@@ -244,7 +245,29 @@ const Dashboard = () => {
                                         </li>
                                         <li>
                                             <button
-                                                onClick={() => setActivePage('departmentList')}
+                                                onClick={() => setActivePage('createDepartment')} // Ensure CreateDepartment option is here
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'createDepartment' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'createDepartment' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>🏢</span>
+                                                Create Department
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('departmentList')} // Ensure DepartmentList option is here
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -266,12 +289,12 @@ const Dashboard = () => {
                                         </li>
                                         <li>
                                             <button
-                                                onClick={() => setActivePage('createDepartment')}
+                                                onClick={() => setActivePage('createBusinessUnit')} // Handle new page for CreateBusinessUnit
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    backgroundColor: activePage === 'createDepartment' ? '#E3F2FD' : 'transparent',
-                                                    color: activePage === 'createDepartment' ? '#1E88E5' : '#555',
+                                                    backgroundColor: activePage === 'createBusinessUnit' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'createBusinessUnit' ? '#1E88E5' : '#555',
                                                     padding: '12px 20px',
                                                     border: 'none',
                                                     borderRadius: '8px',
@@ -282,8 +305,8 @@ const Dashboard = () => {
                                                     transition: 'background-color 0.3s ease, color 0.3s ease',
                                                 }}
                                             >
-                                                <span style={{ marginRight: '15px' }}>🏗️</span>
-                                                Create Department
+                                                <span style={{ marginRight: '15px' }}>🏢</span>
+                                                Create Business Unit
                                             </button>
                                         </li>
                                     </div>
@@ -319,7 +342,15 @@ const Dashboard = () => {
                     {activePage === 'createDepartment' && (
                         <CreateDepartment />
                     )}
+                    {activePage === 'createBusinessUnit' && ( // Handle new page for CreateBusinessUnit
+                        <CreateBusinessUnit />
+                    )}
                 </main>
+            </div>
+<div>
+            <footer className="dashboard-footer">
+                <p>© 2025 OSB Group. All Rights Reserved.</p>
+            </footer>
             </div>
         </div>
     );

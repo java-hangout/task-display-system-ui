@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./ITDeptSpecificDashboard.css";
-import oneSavingBankLogo from './oneSavingBankLogo.png';
+// import oneSavingBankLogo from '../../../Public/oneSavingBankLogo.png';
+const oneSavingBankLogo = process.env.PUBLIC_URL + '/oneSavingBankLogo.png';
 
 const ITDeptSpecificDashboard = () => {
     const { departmentName } = useParams();
@@ -102,7 +103,7 @@ const ITDeptSpecificDashboard = () => {
     return (
         <div className="department-dashboard-container">
             <header className="dashboard-header">
-                <div className="dashboard-title">{departmentName} Task Dashboard</div>
+                <div className="dashboard-title">{departmentName} Department Task Dashboard</div>
             </header>
 
             <main className="main-content">
