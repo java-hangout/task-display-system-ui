@@ -7,6 +7,7 @@ import DepartmentList from '../Departments/DepartmentList'; // Import the Depart
 import CreateDepartment from '../Departments/CreateDepartment'; // Import the CreateDepartment component
 import RegisterUser from '../Users/RegisterUser'; // Import the RegisterUser component
 import CreateBusinessUnit from '../BusinessUnit/CreateBusinessUnit'; // Import the CreateBusinessUnit component
+import BusinessUnitList from '../BusinessUnit/BusinessUnitList'; // Import the BusinessUnitList component
 
 const Dashboard = () => {
     const { logout } = useContext(AuthContext);
@@ -245,7 +246,7 @@ const Dashboard = () => {
                                         </li>
                                         <li>
                                             <button
-                                                onClick={() => setActivePage('createDepartment')} // Ensure CreateDepartment option is here
+                                                onClick={() => setActivePage('createDepartment')}
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -267,7 +268,7 @@ const Dashboard = () => {
                                         </li>
                                         <li>
                                             <button
-                                                onClick={() => setActivePage('departmentList')} // Ensure DepartmentList option is here
+                                                onClick={() => setActivePage('departmentList')}
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -289,7 +290,7 @@ const Dashboard = () => {
                                         </li>
                                         <li>
                                             <button
-                                                onClick={() => setActivePage('createBusinessUnit')} // Handle new page for CreateBusinessUnit
+                                                onClick={() => setActivePage('createBusinessUnit')}
                                                 style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -307,6 +308,28 @@ const Dashboard = () => {
                                             >
                                                 <span style={{ marginRight: '15px' }}>🏢</span>
                                                 Create Business Unit
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('businessUnitList')} // New BusinessUnitList
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'businessUnitList' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'businessUnitList' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>🏢</span>
+                                                Business Unit List
                                             </button>
                                         </li>
                                     </div>
@@ -342,16 +365,18 @@ const Dashboard = () => {
                     {activePage === 'createDepartment' && (
                         <CreateDepartment />
                     )}
-                    {activePage === 'createBusinessUnit' && ( // Handle new page for CreateBusinessUnit
+                    {activePage === 'createBusinessUnit' && (
                         <CreateBusinessUnit />
+                    )}
+                    {activePage === 'businessUnitList' && ( // Render BusinessUnitList component
+                        <BusinessUnitList />
                     )}
                 </main>
             </div>
-<div>
+            
             <footer className="dashboard-footer">
                 <p>© 2025 OSB Group. All Rights Reserved.</p>
             </footer>
-            </div>
         </div>
     );
 };
