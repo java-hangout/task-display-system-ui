@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // Hook to get URL parameters
 import { Bar } from 'react-chartjs-2'; // Importing Bar chart component from Chart.js
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'; // Import necessary Chart.js components
 import './ITDashboard.css'; // Import updated CSS
+// import BusinessUnitEventList from './BusinessUnitEventList'; // Import BusinessUnitEventList component
+import BusinessUnitEventList from '../BusinessUnit/BusinessUnitEventList';
 
 // Register the necessary components
 ChartJS.register(
@@ -20,6 +22,7 @@ const BusinessunitSpecificDashboard  = () => {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isNoTasksAvailable, setIsNoTasksAvailable] = useState(false);
   const [showTable, setShowTable] = useState(true); // State to toggle between table and chart
+  const [showEvents, setShowEvents] = useState(false); // State to toggle events section
 
   // Fetch task data based on businessUnitName
   const fetchTaskData = () => {
@@ -158,11 +161,7 @@ const BusinessunitSpecificDashboard  = () => {
                         <div className="scrolling-content">
                           {counts.titles.length > 0 ? (
                             <div
-                              className={`active ${
-                                counts.titles[currentTaskIndex % counts.titles.length].isOverdue
-                                  ? 'overdue'
-                                  : ''
-                              }`}
+                              className={`active ${counts.titles[currentTaskIndex % counts.titles.length].isOverdue ? 'overdue' : ''}`}
                             >
                               {counts.titles[currentTaskIndex % counts.titles.length].title}
                             </div>
@@ -181,6 +180,17 @@ const BusinessunitSpecificDashboard  = () => {
               <Bar data={chartData} options={{ responsive: true, plugins: { legend: { position: 'bottom' } } }} />
             </div>
           )}
+
+          {/* Toggle to show BusinessUnitEventList */}
+          <div className="event-toggle-section">
+            <button
+              onClick={() => setShowEvents((prev) => !prev)}
+              className="toggle-events-btn"
+            >
+              {showEvents ? 'Hide Events' : 'Show Events'}
+            </button>
+            {showEvents && <BusinessUnitEventList buName={businessUnitName} />}
+          </div>
         </div>
       </main>
 

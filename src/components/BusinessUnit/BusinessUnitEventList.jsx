@@ -12,8 +12,8 @@ const BusinessUnitEventList = ({ buName }) => {
 
     const fetchEvents = async () => {
         try {
-            // const response = await axios.get(`http://localhost:8084/fetch/bu/${buName}`);
-            const response = await axios.get(`http://localhost:8084/fetch/bu/IT`);
+            const response = await axios.get(`http://localhost:8084/fetch/bu/${buName}`);
+            // const response = await axios.get(`http://localhost:8084/fetch/bu/IT`);
             setEvents(response.data);
         } catch (error) {
             console.error('Error fetching events:', error);
