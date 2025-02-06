@@ -8,6 +8,8 @@ import CreateDepartment from '../Departments/CreateDepartment'; // Import the Cr
 import RegisterUser from '../Users/RegisterUser'; // Import the RegisterUser component
 import CreateBusinessUnit from '../BusinessUnit/CreateBusinessUnit'; // Import the CreateBusinessUnit component
 import BusinessUnitList from '../BusinessUnit/BusinessUnitList'; // Import the BusinessUnitList component
+import BusinessUnitEventList from '../BusinessUnit/BusinessUnitEventList'; // Import the BusinessUnitEventList component
+import CreateBusinessUnitEvent from '../BusinessUnit/CreateBusinessUnitEvent'; // Import the CreateBusinessUnitEvent component
 
 const Dashboard = () => {
     const { logout } = useContext(AuthContext);
@@ -332,6 +334,51 @@ const Dashboard = () => {
                                                 Business Unit List
                                             </button>
                                         </li>
+                                        {/* New Links for Business Unit Events */}
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('businessUnitEventList')}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'businessUnitEventList' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'businessUnitEventList' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>📅</span>
+                                                Business Unit Event List
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                onClick={() => setActivePage('createBusinessUnitEvent')}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: activePage === 'createBusinessUnitEvent' ? '#E3F2FD' : 'transparent',
+                                                    color: activePage === 'createBusinessUnitEvent' ? '#1E88E5' : '#555',
+                                                    padding: '12px 20px',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    cursor: 'pointer',
+                                                    width: '100%',
+                                                    textAlign: 'left',
+                                                    fontWeight: '500',
+                                                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                                                }}
+                                            >
+                                                <span style={{ marginRight: '15px' }}>➕</span>
+                                                Create Business Unit Event
+                                            </button>
+                                        </li>
                                     </div>
                                 )}
                             </div>
@@ -340,43 +387,20 @@ const Dashboard = () => {
                 </aside>
 
                 {/* Main Section */}
-                <main style={{ flex: 1, padding: '20px', marginLeft: '270px', overflowY: 'auto', marginTop: '80px' }}>
-                    {activePage === 'taskList' && !taskCreationResponse && (
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <div style={{ width: '100%', maxWidth: '1200px' }}>
-                                <div style={{ overflowX: 'auto' }}>
-                                    <TaskList />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {activePage === 'createTask' && !taskCreationResponse && (
-                        <CreateTask onClose={handleCloseCreateTask} />
-                    )}
-                    {activePage === 'userList' && (
-                        <UserList />
-                    )}
-                    {activePage === 'registerUser' && (
-                        <RegisterUser />
-                    )}
-                    {activePage === 'departmentList' && (
-                        <DepartmentList />
-                    )}
-                    {activePage === 'createDepartment' && (
-                        <CreateDepartment />
-                    )}
-                    {activePage === 'createBusinessUnit' && (
-                        <CreateBusinessUnit />
-                    )}
-                    {activePage === 'businessUnitList' && ( // Render BusinessUnitList component
-                        <BusinessUnitList />
-                    )}
+                <main style={{ flex: 1, padding: '20px', marginLeft: '250px', overflowY: 'auto' }}>
+                    {/* Render Active Page */}
+                    {activePage === 'taskList' && <TaskList />}
+                    {activePage === 'createTask' && <CreateTask onClose={handleCloseCreateTask} />}
+                    {activePage === 'userList' && <UserList />}
+                    {activePage === 'createDepartment' && <CreateDepartment />}
+                    {activePage === 'departmentList' && <DepartmentList />}
+                    {activePage === 'registerUser' && <RegisterUser />}
+                    {activePage === 'businessUnitList' && <BusinessUnitList />}
+                    {activePage === 'createBusinessUnit' && <CreateBusinessUnit />}
+                    {activePage === 'businessUnitEventList' && <BusinessUnitEventList />} {/* New component */}
+                    {activePage === 'createBusinessUnitEvent' && <CreateBusinessUnitEvent />} {/* New component */}
                 </main>
             </div>
-            
-            <footer className="dashboard-footer">
-                <p>© 2025 OSB Group. All Rights Reserved.</p>
-            </footer>
         </div>
     );
 };
